@@ -1,0 +1,178 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import MiniCalendar from '@/components/calendar/MiniCalendar';
+import DayDetail from '@/components/calendar/DayDetail';
+import ChengGuCard from '@/components/calendar/ChengGuCard';
+import {
+  getCalendarInfo,
+  getChengGu,
+  getHourZhi,
+  getShiChen,
+} from '@/lib/lunar';
+
+const HOURS = Array.from({ length: 12 }, (_, i) => {
+  const h = i === 0 ? 23 : (i * 2) - 1;
+  return { value: h, label: getShiChen(h) };
+});
+
+export default function CalendarPage() {
+  const now = new Date();
+  const [year, setYear] = useState(now.getFullYear());
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [day, setDay] = useState(now.getDate());
+  const [hour, setHour] = useState(now.getHours());
+  const [showChengGu, setShowChengGu] = useState(false);
+
+  // 日期输入
+  const [inputYear, setInputYear] = useState(String(year));
+  const [inputMonth, setInputMonth] = useState(String(month));
+  const [inputDay, setInputDay] = useState(String(day));
+
+  const calendarData = useMemo(
+    () => getCalendarInfo(year, month, day, hour),
+    [year, month, day, hour],
+  );
+
+  const chengGuData = useMemo(() => {
+    if (!showChengGu) return null;
+    const hourZhi = getHourZhi(hour);
+    return getChengGu(
+      calendarData.yearGanZhi,
+      calendarData.lunarMonth,
+      calendarData.lunarDay,
+      hourZhi,
+    );
+  }, [showChengGu, calendarData, hour]);
+
+  const handleDateSubmit = () => {
+    const y = parseInt(inputYear);
+    const m = parseInt(inputMonth);
+    const d = parseInt(inputDay);
+    if (y >= 1900 && y <= 2100 && m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+      setYear(y);
+      setMonth(m);
+      setDay(d);
+    }
+  };
+
+  const handleToday = () => {
+    const now = new Date();
+    setYear(now.getFullYear());
+    setMonth(now.getMonth() + 1);
+    setDay(now.getDate());
+    setHour(now.getHours());
+    setInputYear(String(now.getFullYear()));
+    setInputMonth(String(now.getMonth() + 1));
+    setInputDay(String(now.getDate()));
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      {/* 标题 */}
+      <div className="mb-6">
+        <h1 className="section-title text-2xl">公农历查询</h1>
+        <p className="text-sm text-[var(--color-ink-light)] mt-2">
+          支持公历农历互查、四柱八字、纳音五行、节气宜忌、称骨论命
+        </p>
+      </div>
+
+      {/* 日期输入区 */}
+      <div className="card-chinese p-4 mb-6">
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label className="text-xs text-[var(--color-ink-light)] block mb-1">年</label>
+            <input
+              type="number"
+              value={inputYear}
+              onChange={(e) => setInputYear(e.target.value)}
+              min={1900}
+              max={2100}
+              className="w-24 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-[var(--color-ink-light)] block mb-1">月</label>
+            <input
+              type="number"
+              value={inputMonth}
+              onChange={(e) => setInputMonth(e.target.value)}
+              min={1}
+              max={12}
+              className="w-20 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-[var(--color-ink-light)] block mb-1">日</label>
+            <input
+              type="number"
+              value={inputDay}
+              onChange={(e) => setInputDay(e.target.value)}
+              min={1}
+              max={31}
+              className="w-20 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-[var(--color-ink-light)] block mb-1">时辰</label>
+            <select
+              value={hour}
+              onChange={(e) => setHour(parseInt(e.target.value))}
+              className="px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+            >
+              {HOURS.map((h) => (
+                <option key={h.value} value={h.value}>
+                  {h.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button onClick={handleDateSubmit} className="btn-primary text-sm">
+            查询
+          </button>
+          <button onClick={handleToday} className="btn-outline text-sm">
+            今天
+          </button>
+          <button
+            onClick={() => setShowChengGu(!showChengGu)}
+            className={`text-sm px-4 py-2 rounded-lg border transition-colors ${
+              showChengGu
+                ? 'bg-[var(--color-gold)] text-white border-[var(--color-gold)]'
+                : 'border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-white'
+            }`}
+          >
+            称骨论命
+          </button>
+        </div>
+      </div>
+
+      {/* 主内容区 */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* 左侧日历 */}
+        <div className="lg:col-span-4">
+          <MiniCalendar
+            year={year}
+            month={month}
+            selectedDay={day}
+            onSelectDay={(d) => {
+              setDay(d);
+              setInputDay(String(d));
+            }}
+            onChangeMonth={(y, m) => {
+              setYear(y);
+              setMonth(m);
+              setInputYear(String(y));
+              setInputMonth(String(m));
+            }}
+          />
+        </div>
+
+        {/* 右侧详情 */}
+        <div className="lg:col-span-8">
+          <DayDetail data={calendarData} />
+          {showChengGu && chengGuData && <ChengGuCard data={chengGuData} />}
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #8B4513;
+  --color-primary-light: #A0522D;
+  --color-primary-dark: #6B3410;
+  --color-cinnabar: #C23B22;
+  --color-cinnabar-light: #D4574A;
+  --color-cinnabar-dark: #9E2F1B;
+  --color-gold: #B8860B;
+  --color-gold-light: #DAA520;
+  --color-cream: #FFF8F0;
+  --color-parchment: #F5E6D3;
+  --color-ink: #2C1810;
+  --color-ink-light: #4A3728;
+  --color-border-warm: #D4B896;
+  --color-bg-card: #FFFAF5;
+
+  --font-family-song: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  --font-family-kai: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-family-song);
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    line-height: 1.8;
+  }
+
+  ::selection {
+    background-color: var(--color-cinnabar);
+    color: white;
+  }
+}
+
+@layer components {
+  .card-chinese {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-warm);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(139, 69, 19, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .card-chinese:hover {
+    box-shadow: 0 6px 24px rgba(139, 69, 19, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-cinnabar), var(--color-cinnabar-dark));
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--color-cinnabar-light), var(--color-cinnabar));
+    box-shadow: 0 4px 12px rgba(194, 59, 34, 0.3);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--color-primary);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-outline:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .section-title {
+    font-family: var(--font-family-kai);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+  }
+
+  .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-cinnabar), transparent);
+    border-radius: 2px;
+  }
+
+  .divider-chinese {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-border-warm), transparent);
+    margin: 2rem 0;
+  }
+
+  .tag-element {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .tag-wood { background: #E8F5E9; color: #2E7D32; }
+  .tag-fire { background: #FFEBEE; color: #C62828; }
+  .tag-earth { background: #FFF3E0; color: #E65100; }
+  .tag-metal { background: #FFF8E1; color: #F57F17; }
+  .tag-water { background: #E3F2FD; color: #1565C0; }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-parchment);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-warm);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-light);
+}
