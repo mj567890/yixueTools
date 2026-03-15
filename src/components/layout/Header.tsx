@@ -12,7 +12,6 @@ const navItems = [
   { href: '/qimen', label: '奇门排盘', icon: '🧭' },
   { href: '/liuyao', label: '六爻排盘', icon: '⚊' },
   { href: '/taiyi', label: '太乙排盘', icon: '☯' },
-  { href: '/zhaoji', label: '玉匣择吉', icon: '📿' },
   { href: '/naming', label: '起名测名', icon: '✍' },
   { href: '/notes', label: '我的笔记', icon: '📒' },
   { href: '/blog', label: '易学博客', icon: '📖' },

@@ -5,7 +5,7 @@ const tools = [
     href: '/calendar',
     icon: '📅',
     title: '公农历查询',
-    desc: '日期转换、四柱八字、纳音五行、节气查询、民俗择吉、称骨论命',
+    desc: '日期转换、四柱八字、纳音五行、节气查询、民俗择吉、穿衣指南、称骨论命',
     color: 'var(--color-cinnabar)',
   },
   {
@@ -42,13 +42,6 @@ const tools = [
     title: '太乙排盘',
     desc: '太乙神数排盘推演，古三式之首，测国运大事',
     color: '#4527A0',
-  },
-  {
-    href: '/zhaoji',
-    icon: '📿',
-    title: '玉匣择吉',
-    desc: '黄道吉日查询，婚嫁、搬家、开业等民俗择吉参考',
-    color: '#E65100',
   },
   {
     href: '/naming',

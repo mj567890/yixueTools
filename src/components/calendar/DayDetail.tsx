@@ -1,51 +1,9 @@
 'use client';
 
-import { CalendarResult, getWuxingClass, WU_XING_MAP } from '@/lib/lunar';
+import { CalendarResult } from '@/lib/lunar';
 
 interface DayDetailProps {
   data: CalendarResult;
-}
-
-function GanZhiPillar({
-  label,
-  ganZhi,
-  naYin,
-}: {
-  label: string;
-  ganZhi: string;
-  naYin: string;
-}) {
-  const gan = ganZhi[0];
-  const zhi = ganZhi[1];
-  const ganWx = WU_XING_MAP[gan] || '';
-  const zhiWx = WU_XING_MAP[zhi] || '';
-
-  return (
-    <div className="flex flex-col items-center gap-1">
-      {/* text-xs→text-sm(14px) */}
-      <span className="text-sm text-[var(--color-ink-light)]">{label}</span>
-      <div className="card-chinese !p-3 flex flex-col items-center gap-1 min-w-[70px]">
-        <span className={`tag-element ${getWuxingClass(ganWx)}`}>{ganWx}</span>
-        {/* text-xl→text-2xl(24px) 核心数据 */}
-        <span
-          className="text-2xl font-semibold"
-          style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
-        >
-          {gan}
-        </span>
-        <hr className="w-8 border-[var(--color-border-warm)]" />
-        <span
-          className="text-2xl font-semibold"
-          style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
-        >
-          {zhi}
-        </span>
-        <span className={`tag-element ${getWuxingClass(zhiWx)}`}>{zhiWx}</span>
-      </div>
-      {/* text-xs→text-sm(14px) 纳音 */}
-      <span className="text-sm text-[var(--color-gold)]">{naYin}</span>
-    </div>
-  );
 }
 
 export default function DayDetail({ data }: DayDetailProps) {
@@ -110,21 +68,6 @@ export default function DayDetail({ data }: DayDetailProps) {
               </div>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* 四柱排盘 */}
-      <div className="card-chinese p-5">
-        <h3
-          className="section-title mb-5"
-        >
-          四柱八字
-        </h3>
-        <div className="flex items-center justify-center gap-4 md:gap-8">
-          <GanZhiPillar label="年柱" ganZhi={data.yearGanZhi} naYin={data.yearNaYin} />
-          <GanZhiPillar label="月柱" ganZhi={data.monthGanZhi} naYin={data.monthNaYin} />
-          <GanZhiPillar label="日柱" ganZhi={data.dayGanZhi} naYin={data.dayNaYin} />
-          <GanZhiPillar label="时柱" ganZhi={data.timeGanZhi} naYin={data.timeNaYin} />
         </div>
       </div>
 

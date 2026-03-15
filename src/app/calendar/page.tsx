@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import MiniCalendar from '@/components/calendar/MiniCalendar';
 import DayDetail from '@/components/calendar/DayDetail';
 import ChengGuCard from '@/components/calendar/ChengGuCard';
+import CompactBazi from '@/components/calendar/CompactBazi';
+import ZejiSection from '@/components/calendar/ZejiSection';
 import {
   getCalendarInfo,
   getChengGu,
@@ -74,7 +76,7 @@ export default function CalendarPage() {
         <h1 className="section-title text-2xl">公农历查询</h1>
         {/* text-sm→text-base(16px) */}
         <p className="text-base text-[var(--color-ink-light)] mt-2">
-          支持公历农历互查、四柱八字、纳音五行、节气宜忌、称骨论命
+          支持公历农历互查、四柱八字、纳音五行、节气宜忌、民俗择吉、穿衣指南
         </p>
       </div>
 
@@ -150,6 +152,9 @@ export default function CalendarPage() {
         </div>
       </div>
 
+      {/* 紧凑四柱 */}
+      <CompactBazi data={calendarData} />
+
       {/* 主内容区 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* 左侧日历 */}
@@ -175,6 +180,11 @@ export default function CalendarPage() {
         <div className="lg:col-span-8">
           <DayDetail data={calendarData} />
           {showChengGu && chengGuData && <ChengGuCard data={chengGuData} />}
+          <ZejiSection
+            year={year}
+            month={month}
+            day={day}
+          />
         </div>
       </div>
     </div>
