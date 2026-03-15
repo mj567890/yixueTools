@@ -77,10 +77,10 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
     <div className="card-chinese p-5 md:p-6">
       {/* 标题 */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <h3 className="section-title" style={{ fontSize: '1.2rem' }}>
+        <h3 className="section-title">
           流年详情
         </h3>
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-base">
           <span
             className="px-2.5 py-1 rounded-lg border"
             style={{
@@ -97,7 +97,7 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
             </span>
           </span>
           <span
-            className="px-2.5 py-1 rounded-lg border text-xs"
+            className="px-2.5 py-1 rounded-lg border text-sm"
             style={{
               borderColor: 'var(--color-border-warm)',
               backgroundColor: 'var(--color-parchment)',
@@ -121,81 +121,68 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
             <button
               key={ln.year}
               onClick={() => handleCellClick(ln.year)}
-              className="flex flex-col items-center rounded-xl p-2 md:p-3 transition-all cursor-pointer text-center"
+              className="flex flex-col items-center rounded-xl p-2.5 md:p-3.5 transition-all cursor-pointer text-center"
               style={{
                 border: isSelected
-                  ? '2px solid var(--color-gold)'
+                  ? '1px solid var(--color-gold)'
                   : isCurrent
-                    ? '2px solid var(--color-cinnabar)'
+                    ? '1px solid var(--color-cinnabar)'
                     : '1px solid var(--color-border-warm)',
                 backgroundColor: isSelected
-                  ? '#FFFDF5'
+                  ? '#FFF9F2'
                   : isCurrent
                     ? 'var(--color-parchment)'
                     : '#fff',
                 boxShadow: isSelected
-                  ? '0 0 0 2px rgba(184, 134, 11, 0.15), 0 4px 12px rgba(0,0,0,0.08)'
+                  ? '0 2px 8px rgba(184, 134, 11, 0.15)'
                   : isCurrent
-                    ? '0 0 0 2px rgba(183, 28, 28, 0.12), 0 2px 8px rgba(0,0,0,0.06)'
+                    ? '0 2px 8px rgba(183, 28, 28, 0.1)'
                     : 'none',
-                transform: isSelected ? 'scale(1.02)' : undefined,
-              }}
-              onMouseEnter={(e) => {
-                if (!isSelected && !isCurrent) {
-                  e.currentTarget.style.backgroundColor = 'var(--color-parchment)';
-                  e.currentTarget.style.borderColor = 'var(--color-gold)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSelected && !isCurrent) {
-                  e.currentTarget.style.backgroundColor = '#fff';
-                  e.currentTarget.style.borderColor = 'var(--color-border-warm)';
-                }
               }}
             >
-              {/* 年份 */}
-              <span className="text-[11px] font-medium" style={{ color: 'var(--color-ink-light)' }}>
+              {/* 年份 — 11px→14px */}
+              <span className="text-sm font-medium" style={{ color: 'var(--color-ink-light)' }}>
                 {ln.year}
               </span>
 
-              {/* 天干 */}
+              {/* 天干 — 18px→20px */}
               <span
-                className="text-lg font-bold leading-none mt-1"
+                className="text-xl font-semibold leading-none mt-1"
                 style={{
                   fontFamily: 'var(--font-family-kai)',
-                  color: WU_XING_COLORS[ln.ganWuxing]?.text || '#333',
+                  color: WU_XING_COLORS[ln.ganWuxing]?.text || '#5A2E1A',
                 }}
               >
                 {ln.gan}
               </span>
 
-              {/* 地支 */}
+              {/* 地支 — 18px→20px */}
               <span
-                className="text-lg font-bold leading-none mt-0.5"
+                className="text-xl font-semibold leading-none mt-0.5"
                 style={{
                   fontFamily: 'var(--font-family-kai)',
-                  color: WU_XING_COLORS[ln.zhiWuxing]?.text || '#333',
+                  color: WU_XING_COLORS[ln.zhiWuxing]?.text || '#5A2E1A',
                 }}
               >
                 {ln.zhi}
               </span>
 
-              {/* 十神 */}
-              <span className="text-[10px] mt-1" style={{ color: 'var(--color-ink-light)' }}>
+              {/* 十神 — 10px→14px */}
+              <span className="text-sm mt-1.5" style={{ color: '#5A2E1A', fontWeight: 500 }}>
                 {ln.shiShen}
               </span>
 
-              {/* 年龄 */}
+              {/* 年龄 — 10px→14px */}
               <span
-                className="text-[10px] mt-0.5 font-medium"
+                className="text-sm mt-1 font-medium"
                 style={{ color: 'var(--color-primary-dark)' }}
               >
                 {ln.age}岁
               </span>
 
-              {/* 运势等级 */}
+              {/* 运势等级 — 9px→14px */}
               <span
-                className="text-[9px] px-1.5 py-0.5 rounded-full font-medium mt-1"
+                className="text-sm px-2 py-0.5 rounded-full font-medium mt-1.5"
                 style={{
                   color: gradeColor.text,
                   backgroundColor: gradeColor.bg,
@@ -205,17 +192,17 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
                 {ln.grade}
               </span>
 
-              {/* 简洁断语 */}
+              {/* 简洁断语 — 9px→12px */}
               {brief && (
                 <span
-                  className="text-[9px] mt-1 leading-tight hidden md:block"
+                  className="text-xs mt-1 leading-tight hidden md:block"
                   style={{ color: 'var(--color-gold)' }}
                 >
                   {brief}
                 </span>
               )}
 
-              {/* 关系标签 */}
+              {/* 关系标签 — 8px→12px */}
               {ln.relations.length > 0 && (
                 <div className="flex flex-wrap justify-center gap-0.5 mt-1">
                   {ln.relations.slice(0, 2).map((rel, i) => {
@@ -223,7 +210,7 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
                     return (
                       <span
                         key={i}
-                        className="text-[8px] px-1 py-px rounded leading-tight"
+                        className="text-xs px-1 py-px rounded leading-tight"
                         style={{
                           color: relColor.text,
                           backgroundColor: relColor.bg,
@@ -237,10 +224,10 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
                 </div>
               )}
 
-              {/* 当前年标记 */}
+              {/* 当前年标记 — 8px→12px */}
               {isCurrent && (
                 <span
-                  className="text-[8px] mt-1 px-1 py-px rounded font-medium text-white"
+                  className="text-xs mt-1 px-1.5 py-0.5 rounded font-medium text-white"
                   style={{ backgroundColor: 'var(--color-cinnabar)' }}
                 >
                   今年
@@ -251,12 +238,12 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
         })}
       </div>
 
-      {/* 纳音一览 */}
+      {/* 纳音一览 — 10px→14px */}
       <div className="mt-4 flex flex-wrap gap-1.5">
         {liuNianList.map((ln) => (
           <span
             key={ln.year}
-            className="text-[10px] px-1.5 py-0.5 rounded"
+            className="text-sm px-2 py-0.5 rounded"
             style={{
               color: 'var(--color-gold)',
               backgroundColor: 'var(--color-parchment)',
@@ -267,8 +254,8 @@ export default function LiuNianGrid({ liuNianList, daYun, baziResult }: LiuNianG
         ))}
       </div>
 
-      {/* 说明 */}
-      <p className="text-[10px] mt-3 text-center opacity-50" style={{ color: 'var(--color-ink-light)' }}>
+      {/* 说明 — 10px→14px */}
+      <p className="text-disclaimer mt-3">
         * 点击流年格子查看「八字+大运+流年」联动详解
       </p>
 

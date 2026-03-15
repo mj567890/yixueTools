@@ -15,8 +15,10 @@ import {
   analyzeFourDimensions,
   computeDynamicWuxing,
   getBaziInterpretation,
+  getDaYunAnalysis,
   type BaziResult,
   type DaYunResult,
+  type DaYunAnalysis,
   type FourDimensionAnalysis,
   type BaziInterpretation,
 } from '@/lib/lunar';
@@ -82,6 +84,12 @@ export default function BaziPage() {
     return { daYun, list: buildLiuNianList(daYun, result) };
   }, [daYunResult, selectedDaYunIndex, result]);
 
+  // 大运断语分析
+  const daYunAnalysis: DaYunAnalysis | null = useMemo(() => {
+    if (!result || !liuNianData) return null;
+    return getDaYunAnalysis(result, liuNianData.daYun, liuNianData.list);
+  }, [result, liuNianData]);
+
   const dynamicWuxing = useMemo(() => {
     if (!result) return null;
     const selectedDaYun =
@@ -133,13 +141,13 @@ export default function BaziPage() {
   }, [year, month, isLunar]);
 
   const selectCls =
-    'px-2 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30';
+    'px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-[15px] focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30';
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="mb-6">
         <h1 className="section-title text-2xl">八字排盘</h1>
-        <p className="text-sm text-[var(--color-ink-light)] mt-2">
+        <p className="text-[15px] mt-2" style={{ color: '#666' }}>
           输入出生日期与时辰，排出四柱八字，分析十神、藏干、五行平衡
         </p>
       </div>
@@ -153,13 +161,13 @@ export default function BaziPage() {
                 setIsLunar(false);
                 setIsLeapMonth(false);
               }}
-              className={`px-4 py-1.5 text-sm transition-colors ${!isLunar ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'}`}
+              className={`px-4 py-2 text-[15px] font-medium transition-colors ${!isLunar ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[#666] hover:bg-[var(--color-parchment)]'}`}
             >
               公历
             </button>
             <button
               onClick={() => setIsLunar(true)}
-              className={`px-4 py-1.5 text-sm transition-colors ${isLunar ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'}`}
+              className={`px-4 py-2 text-[15px] font-medium transition-colors ${isLunar ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[#666] hover:bg-[var(--color-parchment)]'}`}
             >
               农历
             </button>
@@ -168,20 +176,20 @@ export default function BaziPage() {
           <div className="flex items-center rounded-lg border border-[var(--color-border-warm)] overflow-hidden">
             <button
               onClick={() => setGender(1)}
-              className={`px-4 py-1.5 text-sm transition-colors ${gender === 1 ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'}`}
+              className={`px-4 py-2 text-[15px] font-medium transition-colors ${gender === 1 ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[#666] hover:bg-[var(--color-parchment)]'}`}
             >
               男
             </button>
             <button
               onClick={() => setGender(0)}
-              className={`px-4 py-1.5 text-sm transition-colors ${gender === 0 ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'}`}
+              className={`px-4 py-2 text-[15px] font-medium transition-colors ${gender === 0 ? 'bg-[var(--color-cinnabar)] text-white' : 'bg-white text-[#666] hover:bg-[var(--color-parchment)]'}`}
             >
               女
             </button>
           </div>
 
           {isLunar && (
-            <label className="flex items-center gap-1.5 text-sm text-[var(--color-ink-light)] cursor-pointer">
+            <label className="flex items-center gap-1.5 text-[15px] cursor-pointer" style={{ color: '#666' }}>
               <input
                 type="checkbox"
                 checked={isLeapMonth}
@@ -192,8 +200,8 @@ export default function BaziPage() {
             </label>
           )}
 
-          <label className="flex items-center gap-1.5 text-sm cursor-pointer ml-auto">
-            <span className="text-[var(--color-ink-light)]">
+          <label className="flex items-center gap-1.5 text-[15px] cursor-pointer ml-auto">
+            <span style={{ color: '#666' }}>
               按立春划分年柱
             </span>
             <button
@@ -209,7 +217,7 @@ export default function BaziPage() {
 
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">
+            <label className="text-[13px] font-medium block mb-1" style={{ color: '#888' }}>
               {isLunar ? '农历年' : '公历年'}
             </label>
             <select
@@ -226,7 +234,7 @@ export default function BaziPage() {
           </div>
 
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">
+            <label className="text-[13px] font-medium block mb-1" style={{ color: '#888' }}>
               月
             </label>
             <select
@@ -243,7 +251,7 @@ export default function BaziPage() {
           </div>
 
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">
+            <label className="text-[13px] font-medium block mb-1" style={{ color: '#888' }}>
               日
             </label>
             <select
@@ -260,7 +268,7 @@ export default function BaziPage() {
           </div>
 
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">
+            <label className="text-[13px] font-medium block mb-1" style={{ color: '#888' }}>
               时辰
             </label>
             <select
@@ -276,7 +284,7 @@ export default function BaziPage() {
             </select>
           </div>
 
-          <button onClick={handlePaiPan} className="btn-primary text-sm px-6">
+          <button onClick={handlePaiPan} className="btn-primary px-6">
             排盘
           </button>
 
@@ -290,7 +298,7 @@ export default function BaziPage() {
               setActiveTab('paipan');
               setError('');
             }}
-            className="btn-outline text-sm"
+            className="btn-outline"
           >
             清除
           </button>
@@ -350,6 +358,7 @@ export default function BaziPage() {
                   data={daYunResult}
                   selectedIndex={selectedDaYunIndex ?? undefined}
                   onSelect={setSelectedDaYunIndex}
+                  analysis={daYunAnalysis}
                 />
               )}
               {liuNianData && result && (

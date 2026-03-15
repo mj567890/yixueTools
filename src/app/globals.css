@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* ---- 色彩体系 ---- */
   --color-primary: #8B4513;
   --color-primary-light: #A0522D;
-  --color-primary-dark: #6B3410;
+  --color-primary-dark: #5A2E1A;
   --color-cinnabar: #C23B22;
   --color-cinnabar-light: #D4574A;
   --color-cinnabar-dark: #9E2F1B;
@@ -11,13 +12,23 @@
   --color-gold-light: #DAA520;
   --color-cream: #FFF8F0;
   --color-parchment: #F5E6D3;
-  --color-ink: #2C1810;
-  --color-ink-light: #4A3728;
+  --color-ink: #333333;
+  --color-ink-light: #666666;
+  --color-ink-dark: #5A2E1A;
   --color-border-warm: #D4B896;
   --color-bg-card: #FFFAF5;
 
-  --font-family-song: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
-  --font-family-kai: "LXGW WenKai", "KaiTi", "STKaiti", serif;
+  /* ---- 字体家族 ---- */
+  --font-family-song: "DengXian", "SimSun", "Noto Sans SC", sans-serif;
+  --font-family-kai: "DengXian", "SimSun", "Noto Sans SC", sans-serif;
+
+  /* ---- 字号层级 token（生成 text-title-lg 等工具类） ---- */
+  --font-size-title-lg: 1.5rem;      /* 24px 页面大标题 */
+  --font-size-title-md: 1.25rem;     /* 20px 模块标题 */
+  --font-size-data: 1.5rem;          /* 24px 核心数据 */
+  --font-size-label: 1.125rem;       /* 18px 辅助标签 */
+  --font-size-body: 1rem;            /* 16px 说明文字 */
+  --font-size-note: 0.875rem;        /* 14px 底部小字（最小阈值） */
 }
 
 @layer base {
@@ -25,7 +36,11 @@
     font-family: var(--font-family-song);
     background-color: var(--color-cream);
     color: var(--color-ink);
-    line-height: 1.8;
+    /* 全系统行高统一 1.5 */
+    line-height: 1.5;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
@@ -48,12 +63,14 @@
     transform: translateY(-2px);
   }
 
+  /* ---- 按钮：统一 16px / weight 500 ---- */
   .btn-primary {
     background: linear-gradient(135deg, var(--color-cinnabar), var(--color-cinnabar-dark));
     color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 8px;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
@@ -70,7 +87,8 @@
     padding: 0.5rem 1.5rem;
     border-radius: 8px;
     border: 1px solid var(--color-primary);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 1rem;
     transition: all 0.3s ease;
     cursor: pointer;
   }
@@ -80,11 +98,13 @@
     color: white;
   }
 
+  /* ---- 模块标题：20px / weight 700 ---- */
   .section-title {
     font-family: var(--font-family-kai);
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: var(--color-primary-dark);
+    letter-spacing: 0.03em;
     position: relative;
     display: inline-block;
     padding-bottom: 0.5rem;
@@ -108,19 +128,78 @@
     margin: 2rem 0;
   }
 
+  /* ---- 五行元素标签：14px / weight 600 ---- */
   .tag-element {
     display: inline-block;
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    font-size: 0.875rem;
+    font-weight: 600;
   }
 
-  .tag-wood { background: #E8F5E9; color: #2E7D32; }
-  .tag-fire { background: #FFEBEE; color: #C62828; }
-  .tag-earth { background: #FFF3E0; color: #E65100; }
-  .tag-metal { background: #FFF8E1; color: #F57F17; }
-  .tag-water { background: #E3F2FD; color: #1565C0; }
+  .tag-wood { background: #E8F5E9; color: #1B5E20; }
+  .tag-fire { background: #FFEBEE; color: #B71C1C; }
+  .tag-earth { background: #FFF3E0; color: #BF360C; }
+  .tag-metal { background: #FFF8E1; color: #E65100; }
+  .tag-water { background: #E3F2FD; color: #0D47A1; }
+
+  /* ---- 八字天干地支核心数据字体 ---- */
+  .ganzhi-char {
+    font-family: var(--font-family-kai);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+  }
+
+  /* ---- 十神标签：16px / weight 600 ---- */
+  .shishen-tag {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.15rem 0.625rem;
+    border-radius: 9999px;
+    letter-spacing: 0.04em;
+  }
+
+  /* ---- 柱名标签：14px / weight 700 ---- */
+  .pillar-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-dark);
+  }
+
+  /* ---- 免责声明/底部注释：统一 14px ---- */
+  .text-disclaimer {
+    font-size: 0.875rem;
+    color: var(--color-ink-light);
+    opacity: 0.6;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ---- 表单控件基础样式：16px ---- */
+  .form-input {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-border-warm);
+    background-color: white;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .form-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(194, 59, 34, 0.3);
+  }
+
+  /* ---- 表单标签：14px / weight 500 ---- */
+  .form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-ink-light);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
 }
 
 /* 滚动条美化 */

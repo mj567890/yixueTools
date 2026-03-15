@@ -37,9 +37,6 @@ function getPoint(cx: number, cy: number, radius: number, angleDeg: number) {
 
 /**
  * 五行力量雷达图组件
- *
- * 使用 SVG 绘制五角雷达图（蛛网图），展示五行力量分布。
- * 支持三个层级：原局 / +大运 / +流年，可切换对比。
  */
 export default function WuXingChart({
   data,
@@ -99,18 +96,18 @@ export default function WuXingChart({
 
   return (
     <div className="card-chinese p-5 md:p-6">
-      <h3 className="section-title mb-4" style={{ fontSize: '1.2rem' }}>
+      <h3 className="section-title mb-4">
         五行力量图
       </h3>
 
-      {/* 层级切换 */}
+      {/* 层级切换 — text-xs→text-sm(14px) */}
       <div className="flex items-center gap-2 mb-4">
         {LAYER_OPTIONS.map((opt) => (
           <button
             key={opt.key}
             disabled={!opt.enabled}
             onClick={() => onLayerChange(opt.key)}
-            className={`px-3 py-1 text-xs rounded-lg border transition-colors ${
+            className={`px-3 py-1.5 text-sm rounded-lg border transition-colors ${
               activeLayer === opt.key
                 ? 'text-white'
                 : opt.enabled
@@ -182,7 +179,7 @@ export default function WuXingChart({
               />
             ))}
 
-            {/* 标签 */}
+            {/* 标签 — fontSize 14→16 */}
             {ELEMENTS.map((el, i) => {
               const lp = labelPoints[i];
               const colors = WU_XING_COLORS[el];
@@ -195,19 +192,20 @@ export default function WuXingChart({
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill={colors?.text || '#333'}
-                    fontSize="14"
+                    fontSize="16"
                     fontWeight="bold"
                     fontFamily="var(--font-family-kai)"
                   >
                     {el}
                   </text>
+                  {/* fontSize 10→14 */}
                   <text
                     x={lp.x}
-                    y={lp.y + 10}
+                    y={lp.y + 12}
                     textAnchor="middle"
                     dominantBaseline="middle"
                     fill="var(--color-ink-light)"
-                    fontSize="10"
+                    fontSize="14"
                   >
                     {val.toFixed(1)}
                   </text>
@@ -228,13 +226,14 @@ export default function WuXingChart({
 
             return (
               <div key={el} className="flex items-center gap-2">
+                {/* 五行标签 — text-xs→text-sm(14px) */}
                 <span
-                  className="w-7 h-7 flex items-center justify-center rounded text-xs font-bold shrink-0"
+                  className="w-8 h-8 flex items-center justify-center rounded text-sm font-bold shrink-0"
                   style={{ color: colors?.text, backgroundColor: colors?.bg }}
                 >
                   {el}
                 </span>
-                <div className="flex-1 h-5 rounded overflow-hidden relative" style={{ backgroundColor: '#F5F0EB' }}>
+                <div className="flex-1 h-6 rounded overflow-hidden relative" style={{ backgroundColor: '#F5F0EB' }}>
                   <div
                     className="h-full rounded transition-all duration-500"
                     style={{
@@ -243,17 +242,18 @@ export default function WuXingChart({
                       opacity: 0.7,
                     }}
                   />
+                  {/* text-[10px]→text-sm(14px) */}
                   <span
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[10px] font-bold"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-sm font-bold"
                     style={{ color: 'var(--color-ink)' }}
                   >
                     {val.toFixed(1)}
                   </span>
                 </div>
-                {/* 显示与原局的差值 */}
+                {/* 差值 — text-[10px]→text-sm(14px) */}
                 {activeLayer !== 'original' && diff !== 0 && (
                   <span
-                    className="text-[10px] w-10 text-right shrink-0 font-medium"
+                    className="text-sm w-12 text-right shrink-0 font-medium"
                     style={{ color: diff > 0 ? '#15803D' : '#DC2626' }}
                   >
                     {diff > 0 ? '+' : ''}{diff.toFixed(1)}
@@ -263,8 +263,8 @@ export default function WuXingChart({
             );
           })}
 
-          {/* 层级说明 */}
-          <div className="pt-2 text-[10px]" style={{ color: 'var(--color-ink-light)' }}>
+          {/* 层级说明 — text-[10px]→text-sm(14px) */}
+          <div className="pt-2 text-sm" style={{ color: 'var(--color-ink-light)' }}>
             <div>原局：天干×1.0 + 地支×0.8 + 藏干加权</div>
             {activeLayer !== 'original' && <div>大运/流年按影响权重叠加</div>}
           </div>

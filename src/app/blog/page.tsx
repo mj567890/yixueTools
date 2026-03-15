@@ -11,7 +11,8 @@ export default function BlogPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="section-title text-2xl mb-2">易学博客</h1>
-      <p className="text-sm text-[var(--color-ink-light)] mb-6">
+      {/* text-sm→text-base(16px) */}
+      <p className="text-base text-[var(--color-ink-light)] mb-6">
         精选易学文章与经典解读，助力学习提升
       </p>
 
@@ -20,17 +21,20 @@ export default function BlogPage() {
           <div key={i} className="card-chinese p-5 flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <span
-                className="text-base font-bold"
+                className="text-[17px] font-bold"
                 style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
               >
                 {a.title}
               </span>
-              <span className="text-xs px-2 py-0.5 rounded bg-[var(--color-parchment)] text-[var(--color-primary)]">
+              {/* text-xs→text-sm(14px) */}
+              <span className="text-sm px-2 py-0.5 rounded bg-[var(--color-parchment)] text-[var(--color-primary)]">
                 {a.tag}
               </span>
             </div>
-            <p className="text-sm text-[var(--color-ink-light)]">{a.desc}</p>
-            <span className="text-xs text-[var(--color-cinnabar)] mt-auto cursor-pointer hover:underline">
+            {/* text-sm→text-base(16px) */}
+            <p className="text-base text-[var(--color-ink-light)]">{a.desc}</p>
+            {/* text-xs→text-sm(14px) */}
+            <span className="text-sm text-[var(--color-cinnabar)] mt-auto cursor-pointer hover:underline">
               阅读全文 →
             </span>
           </div>
@@ -38,7 +42,7 @@ export default function BlogPage() {
       </div>
 
       <div className="card-chinese p-6 mt-8 text-center">
-        <p className="text-[var(--color-ink-light)] text-sm">
+        <p className="text-base text-[var(--color-ink-light)]">
           更多文章持续更新中，欢迎收藏关注
         </p>
       </div>

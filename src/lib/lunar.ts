@@ -2003,6 +2003,358 @@ export function getLiuNianAnalysis(
   };
 }
 
+// ==================== 大运断语分析（DaYun Analysis） ====================
+
+/** 十神对应的大运十年主题 */
+const SHISHEN_DAYUN_THEME: Record<string, {
+  overview: string;
+  career: string;
+  wealth: string;
+  marriage: string;
+  health: string;
+}> = {
+  '比肩': {
+    overview: '比肩运主竞争与并肩，同辈助力与争夺并存',
+    career: '事业竞争加剧，需巩固核心优势，团队合作中注意话语权',
+    wealth: '财运平稳偏紧，不宜合伙经营，守好本业为上',
+    marriage: '感情趋于平淡，双方各忙各的，需主动经营互动',
+    health: '精力充沛但易冲动，注意运动安全',
+  },
+  '劫财': {
+    overview: '劫财运主社交活跃，人脉拓展同时暗藏耗财之象',
+    career: '事业有拓展机会，但需防同行竞争、合伙纠纷',
+    wealth: '破财风险偏高，不宜借贷担保，投资需保守',
+    marriage: '异性缘增加但桃花杂乱，已婚者注意感情维护',
+    health: '脾气易躁，注意控制情绪，防外伤',
+  },
+  '食神': {
+    overview: '食神运主才华展现、生活惬意，是创作和表达的好时期',
+    career: '适合展示专业才能，创意类工作有突破，口碑提升',
+    wealth: '才华变现机会增多，副业可期，收入有增长空间',
+    marriage: '感情甜蜜和谐，生活品质提升，利生育',
+    health: '食欲旺盛，注意饮食节制，防体重增加',
+  },
+  '伤官': {
+    overview: '伤官运主创新突破，思维活跃但口舌是非增多',
+    career: '敢于挑战权威，有创新成果，但人际关系需谨慎处理',
+    wealth: '投机收益与风险并存，适合技术变现，不宜激进',
+    marriage: '言语冲突增多，宜忍让包容，未婚者恋爱波折',
+    health: '注意口腔、消化系统和呼吸道',
+  },
+  '正财': {
+    overview: '正财运主稳定收入、务实经营，是积累财富的踏实阶段',
+    career: '工作稳定有晋升空间，适合深耕本业，有加薪机会',
+    wealth: '正财入库，收入稳步增长，适合稳健理财',
+    marriage: '男命利婚姻，感情稳定有归属感',
+    health: '身体消耗偏大，注意劳逸结合',
+  },
+  '偏财': {
+    overview: '偏财运主意外机遇，商机涌现但需把控风险',
+    career: '有跨界发展或意外机遇，适合开拓新业务领域',
+    wealth: '偏财可期，投资有回报，但切忌贪多冒进',
+    marriage: '社交桃花旺盛，应酬增多，已婚者注意分寸',
+    health: '应酬多注意肝胃，生活作息易不规律',
+  },
+  '正官': {
+    overview: '正官运主规范进取，有升迁机会，贵人提携的好时期',
+    career: '事业上升期，有升职晋级机会，上级关系融洽',
+    wealth: '收入稳中有升，适合体制内发展或规范化经营',
+    marriage: '女命利婚姻，有正缘出现的机会',
+    health: '工作压力增大，注意心血管和睡眠质量',
+  },
+  '七杀': {
+    overview: '七杀运主压力与挑战，是锻炼能力、逆境成长的考验期',
+    career: '竞争激烈、压力大，但能力提升快，适合拼搏进取',
+    wealth: '财运波动较大，险中求财，需见好就收',
+    marriage: '感情有波折和考验，需耐心磨合沟通',
+    health: '精神压力大，注意睡眠和情绪管理',
+  },
+  '正印': {
+    overview: '正印运主贵人助力、学业有成，是充电提升的好阶段',
+    career: '适合学习深造、考取资质，有长辈或贵人扶持',
+    wealth: '财运不温不火，不宜冒险投资，稳守为主',
+    marriage: '感情平和温馨，家庭关系和睦',
+    health: '身体恢复期，利于养生调理',
+  },
+  '偏印': {
+    overview: '偏印运主独立思考、技术钻研，适合沉淀积累但社交减少',
+    career: '适合研究性、技术性工作，不宜频繁社交或跳槽',
+    wealth: '财运平淡，不宜大额投资，小心被套',
+    marriage: '感情有冷淡倾向，需主动经营，防孤独感',
+    health: '注意消化系统和心理情绪调节',
+  },
+};
+
+/** 大运断语-特殊年份提示 */
+export interface DaYunSpecialYear {
+  year: number;
+  ganZhi: string;
+  tip: string;
+  type: 'risk' | 'opportunity' | 'turning';
+  reason: string;
+}
+
+/** 大运断语-维度判断 */
+export interface DaYunDimVerdict {
+  dimension: string;
+  icon: string;
+  text: string;
+  type: 'positive' | 'negative' | 'neutral';
+}
+
+/** 大运断语分析完整结果 */
+export interface DaYunAnalysis {
+  /** 大运干支 */
+  ganZhi: string;
+  ganWuxing: string;
+  zhiWuxing: string;
+  shiShen: string;
+  score: number;
+  grade: string;
+  /** 十年总述 */
+  summary: string;
+  /** 与原局的核心作用关系 */
+  wxInteraction: string;
+  /** 四维度判断 */
+  dimVerdicts: DaYunDimVerdict[];
+  /** 特殊年份提示（2-3个） */
+  specialYears: DaYunSpecialYear[];
+}
+
+/**
+ * 大运断语分析
+ *
+ * 综合「八字原局 + 该步大运 + 对应10年流年」推导：
+ * 1. 十年总述：大运五行与原局喜忌的匹配 + 合冲关系 + 补缺检测
+ * 2. 四维断语：事业/财运/感情/健康的整体判断
+ * 3. 特殊年份：从10年流年中筛选伏吟/反吟/极端评分/多重冲克的关键年份
+ */
+export function getDaYunAnalysis(
+  baziResult: BaziResult,
+  daYun: DaYunItem,
+  liuNianList: LiuNianItem[],
+): DaYunAnalysis {
+  const { pillars, dayMaster, wuxingAnalysis } = baziResult;
+  const { dayMasterStrength, missing } = wuxingAnalysis;
+  const dayWx = WU_XING_MAP[dayMaster];
+  const dyGanWx = daYun.ganWuxing;
+  const dyZhiWx = daYun.zhiWuxing;
+  const elements = ['木', '火', '土', '金', '水'];
+
+  // --- 用神/忌神 ---
+  const genMe = elements.find((e) => WX_GENERATES[e] === dayWx);
+  const iGen = WX_GENERATES[dayWx];
+  const iCtrl = WX_CONTROLS[dayWx];
+  const ctrlMe = elements.find((e) => WX_CONTROLS[e] === dayWx);
+
+  let yongShen: string[] = [];
+  let jiShen: string[] = [];
+  if (dayMasterStrength === '偏弱') {
+    yongShen = [dayWx, genMe].filter(Boolean) as string[];
+    jiShen = [iGen, iCtrl, ctrlMe].filter(Boolean) as string[];
+  } else if (dayMasterStrength === '偏强') {
+    yongShen = [iGen, iCtrl, ctrlMe].filter(Boolean) as string[];
+    jiShen = [dayWx, genMe].filter(Boolean) as string[];
+  } else {
+    yongShen = [iGen, dayWx].filter(Boolean) as string[];
+  }
+
+  const ganFavorable = yongShen.includes(dyGanWx);
+  const zhiFavorable = yongShen.includes(dyZhiWx);
+  const ganUnfavorable = jiShen.includes(dyGanWx);
+  const zhiUnfavorable = jiShen.includes(dyZhiWx);
+
+  // --- 大运与原局合冲检测 ---
+  const dyClashes: string[] = [];
+  const dyHarmonies: string[] = [];
+  const pillarNames = ['年柱', '月柱', '日柱', '时柱'];
+  for (let i = 0; i < pillars.length; i++) {
+    const p = pillars[i];
+    if (GAN_WU_HE[daYun.gan] === p.gan) dyHarmonies.push(`${daYun.gan}${p.gan}合（${pillarNames[i]}）`);
+    if (ZHI_CHONG[daYun.zhi] === p.zhi) dyClashes.push(`${daYun.zhi}${p.zhi}冲（${pillarNames[i]}）`);
+    if (ZHI_HE[daYun.zhi] === p.zhi) dyHarmonies.push(`${daYun.zhi}${p.zhi}合（${pillarNames[i]}）`);
+  }
+
+  // --- 补缺检测 ---
+  const supplements = missing.filter((m) => m === dyGanWx || m === dyZhiWx);
+
+  // --- 构建十年总述 ---
+  const theme = SHISHEN_DAYUN_THEME[daYun.shiShen] || SHISHEN_DAYUN_THEME['比肩'];
+
+  let wxInteraction = `大运${daYun.ganZhi}（${dyGanWx}${dyZhiWx}），十神${daYun.shiShen}。`;
+  if (ganFavorable && zhiFavorable) {
+    wxInteraction += `干支五行皆合用神，整体助力强劲。`;
+  } else if (ganFavorable || zhiFavorable) {
+    wxInteraction += `${ganFavorable ? '天干' : '地支'}五行合用神，有一定助力。`;
+  } else if (ganUnfavorable && zhiUnfavorable) {
+    wxInteraction += `干支五行皆为忌神，此运需谨慎应对。`;
+  } else if (ganUnfavorable || zhiUnfavorable) {
+    wxInteraction += `${ganUnfavorable ? '天干' : '地支'}五行偏忌，部分方面承压。`;
+  } else {
+    wxInteraction += `五行中性，运势平稳过渡。`;
+  }
+
+  if (supplements.length > 0) {
+    wxInteraction += `补原局所缺${supplements.join('、')}行，改善短板。`;
+  }
+  if (dyClashes.length > 0) {
+    wxInteraction += `与原局有冲：${dyClashes.join('、')}，此运变动较大。`;
+  }
+  if (dyHarmonies.length > 0) {
+    wxInteraction += `与原局有合：${dyHarmonies.join('、')}，人际融洽。`;
+  }
+
+  // --- 总述拼接 ---
+  const avgScore = liuNianList.length > 0
+    ? liuNianList.reduce((s, l) => s + l.score, 0) / liuNianList.length
+    : daYun.score;
+  let trendWord = '平稳';
+  if (avgScore >= 3.5) trendWord = '上升';
+  else if (avgScore >= 2.8) trendWord = '稳中有进';
+  else if (avgScore >= 2.0) trendWord = '平稳';
+  else trendWord = '承压';
+
+  const summary = `${theme.overview}。日主${dayMasterStrength}，此运整体走势${trendWord}（均分${Math.round(avgScore * 10) / 10}）。${supplements.length > 0 ? `大运补齐${supplements.join('、')}行不足，利于改善对应方面。` : ''}`;
+
+  // --- 四维断语 ---
+  const dimVerdicts: DaYunDimVerdict[] = [];
+
+  const careerPositive = ['正官', '正印', '七杀'].includes(daYun.shiShen) && (ganFavorable || zhiFavorable || daYun.score >= 3.0);
+  const careerNegative = ['比肩', '劫财', '伤官'].includes(daYun.shiShen) && (ganUnfavorable || daYun.score < 2.0);
+  dimVerdicts.push({
+    dimension: '事业', icon: '💼', text: theme.career,
+    type: careerPositive ? 'positive' : careerNegative ? 'negative' : 'neutral',
+  });
+
+  const wealthPositive = ['正财', '偏财', '食神'].includes(daYun.shiShen) && (ganFavorable || zhiFavorable);
+  const wealthNegative = ['劫财', '比肩'].includes(daYun.shiShen) && (ganUnfavorable || zhiUnfavorable);
+  dimVerdicts.push({
+    dimension: '财运', icon: '💰', text: theme.wealth,
+    type: wealthPositive ? 'positive' : wealthNegative ? 'negative' : 'neutral',
+  });
+
+  const marriagePositive = ['正财', '正官'].includes(daYun.shiShen) && daYun.score >= 2.5;
+  const marriageNegative = ['伤官', '劫财'].includes(daYun.shiShen) && daYun.score < 2.5;
+  dimVerdicts.push({
+    dimension: '感情', icon: '💑', text: theme.marriage,
+    type: marriagePositive ? 'positive' : marriageNegative ? 'negative' : 'neutral',
+  });
+
+  const healthNegative = ['七杀', '伤官'].includes(daYun.shiShen) && dayMasterStrength === '偏弱';
+  const healthPositive = ['正印', '食神'].includes(daYun.shiShen) && (ganFavorable || zhiFavorable);
+  dimVerdicts.push({
+    dimension: '健康', icon: '🏥', text: theme.health,
+    type: healthPositive ? 'positive' : healthNegative ? 'negative' : 'neutral',
+  });
+
+  // --- 特殊年份筛选 ---
+  interface SpecialCandidate {
+    ln: LiuNianItem;
+    priority: number;
+    reasons: string[];
+    tip: string;
+    type: 'risk' | 'opportunity' | 'turning';
+  }
+  const candidates: SpecialCandidate[] = [];
+
+  for (const ln of liuNianList) {
+    const reasons: string[] = [];
+    let priority = 0;
+    let type: 'risk' | 'opportunity' | 'turning' = 'turning';
+    let tip = '';
+
+    // 伏吟：流年干支 = 大运干支
+    if (ln.gan === daYun.gan && ln.zhi === daYun.zhi) {
+      reasons.push('伏吟（流年与大运干支相同）');
+      tip = '伏吟之年事有反复，注意情绪波动和重复困局';
+      priority += 3;
+      type = 'risk';
+    }
+
+    // 反吟：流年地支冲大运地支
+    if (ZHI_CHONG[ln.zhi] === daYun.zhi) {
+      reasons.push('反吟（流年地支冲大运地支）');
+      if (!tip) tip = '反吟之年变动剧烈，重大决策宜缓行';
+      priority += 2.5;
+      type = 'risk';
+    }
+
+    // 与原局多重冲克
+    const clashCount = ln.relations.filter((r) => r.includes('冲')).length;
+    const harmonyCount = ln.relations.filter((r) => r.includes('合')).length;
+    if (clashCount >= 2) {
+      reasons.push(`与原局多重冲克（${clashCount}冲）`);
+      if (!tip) tip = '多柱受冲，此年变动较大，注意人际和健康';
+      priority += 2;
+      type = 'risk';
+    }
+
+    // 极低分
+    if (ln.score <= 1.5) {
+      reasons.push(`评分极低（${ln.score}分）`);
+      if (!tip) tip = '五行失衡严重，各方面需格外谨慎';
+      priority += 2;
+      type = 'risk';
+    }
+
+    // 极高分
+    if (ln.score >= 4.2) {
+      reasons.push(`评分极高（${ln.score}分）`);
+      if (!tip) tip = '五行配合良好，适合把握重大机遇';
+      priority += 2;
+      type = 'opportunity';
+    }
+
+    // 多重合
+    if (harmonyCount >= 2) {
+      reasons.push(`与原局多重合（${harmonyCount}合）`);
+      if (!tip) tip = '多合之年贵人缘旺，适合推进合作';
+      priority += 1.5;
+      type = 'opportunity';
+    }
+
+    if (reasons.length > 0) {
+      candidates.push({ ln, priority, reasons, tip, type });
+    }
+  }
+
+  // 按优先级排序，取前 2-3 个
+  candidates.sort((a, b) => b.priority - a.priority);
+  const topSpecial = candidates.slice(0, 3);
+
+  const specialYears: DaYunSpecialYear[] = topSpecial.map((c) => ({
+    year: c.ln.year,
+    ganZhi: c.ln.ganZhi,
+    tip: c.tip,
+    type: c.type,
+    reason: c.reasons.join('；'),
+  }));
+
+  // 如果没有特殊年份
+  if (specialYears.length === 0) {
+    specialYears.push({
+      year: 0,
+      ganZhi: '',
+      tip: '本运十年无重大波动，整体平稳',
+      type: 'opportunity',
+      reason: '各年份评分均匀，无明显冲合',
+    });
+  }
+
+  return {
+    ganZhi: daYun.ganZhi,
+    ganWuxing: dyGanWx,
+    zhiWuxing: dyZhiWx,
+    shiShen: daYun.shiShen,
+    score: daYun.score,
+    grade: daYun.grade,
+    summary,
+    wxInteraction,
+    dimVerdicts,
+    specialYears,
+  };
+}
+
 // ==================== Re-export 解读引擎 ====================
 
 export { getBaziInterpretation } from './bazi-interpretation';

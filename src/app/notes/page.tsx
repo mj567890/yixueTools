@@ -84,34 +84,36 @@ export default function NotesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="section-title text-2xl mb-2">我的笔记</h1>
-      <p className="text-sm text-[var(--color-ink-light)] mb-6">
+      {/* text-sm→text-base(16px) */}
+      <p className="text-base text-[var(--color-ink-light)] mb-6">
         所有笔记数据存储在本地浏览器中，不会上传服务器
       </p>
 
       {/* 编辑区 */}
       <div className="card-chinese p-5 mb-6">
+        {/* text-sm→form-input(16px) */}
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="笔记标题..."
-          className="w-full px-3 py-2 mb-3 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+          className="form-input w-full mb-3"
         />
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="记录你的易学心得..."
           rows={5}
-          className="w-full px-3 py-2 mb-3 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30 resize-y"
+          className="form-input w-full mb-3 resize-y"
         />
         <div className="flex gap-2">
           {editingId ? (
             <>
-              <button onClick={handleUpdate} className="btn-primary text-sm">保存修改</button>
-              <button onClick={handleCancel} className="btn-outline text-sm">取消</button>
+              <button onClick={handleUpdate} className="btn-primary">保存修改</button>
+              <button onClick={handleCancel} className="btn-outline">取消</button>
             </>
           ) : (
-            <button onClick={handleAdd} className="btn-primary text-sm">添加笔记</button>
+            <button onClick={handleAdd} className="btn-primary">添加笔记</button>
           )}
         </div>
       </div>
@@ -120,35 +122,38 @@ export default function NotesPage() {
       {notes.length === 0 ? (
         <div className="card-chinese p-8 text-center">
           <span className="text-4xl mb-4 block">📒</span>
-          <p className="text-[var(--color-ink-light)]">暂无笔记，开始记录你的学习心得吧</p>
+          <p className="text-base text-[var(--color-ink-light)]">暂无笔记，开始记录你的学习心得吧</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {notes.map((note) => (
             <div key={note.id} className="card-chinese p-5">
               <h3
-                className="text-base font-bold mb-2"
+                className="text-[17px] font-bold mb-2"
                 style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
               >
                 {note.title}
               </h3>
-              <p className="text-sm text-[var(--color-ink-light)] whitespace-pre-wrap mb-3 line-clamp-4">
+              {/* text-sm→text-base(16px) */}
+              <p className="text-base text-[var(--color-ink-light)] whitespace-pre-wrap mb-3 line-clamp-4">
                 {note.content}
               </p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-[var(--color-ink-light)] opacity-60">
+                {/* text-xs→text-sm(14px) */}
+                <span className="text-sm text-[var(--color-ink-light)] opacity-60">
                   {new Date(note.updatedAt).toLocaleString('zh-CN')}
                 </span>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
+                  {/* text-xs→text-sm(14px) */}
                   <button
                     onClick={() => handleEdit(note)}
-                    className="text-xs text-[var(--color-primary)] hover:text-[var(--color-cinnabar)] transition-colors"
+                    className="text-sm text-[var(--color-primary)] hover:text-[var(--color-cinnabar)] transition-colors"
                   >
                     编辑
                   </button>
                   <button
                     onClick={() => handleDelete(note.id)}
-                    className="text-xs text-red-400 hover:text-red-600 transition-colors"
+                    className="text-sm text-red-400 hover:text-red-600 transition-colors"
                   >
                     删除
                   </button>

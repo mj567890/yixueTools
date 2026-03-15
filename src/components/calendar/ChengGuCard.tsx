@@ -20,10 +20,7 @@ export default function ChengGuCard({ data }: ChengGuCardProps) {
 
   return (
     <div className="card-chinese p-5">
-      <h3
-        className="section-title mb-5"
-        style={{ fontSize: '1.1rem' }}
-      >
+      <h3 className="section-title mb-5">
         称骨论命
       </h3>
 
@@ -36,11 +33,13 @@ export default function ChengGuCard({ data }: ChengGuCardProps) {
           >
             {data.totalWeightStr}
           </div>
-          <div className="text-sm text-[var(--color-ink-light)]">
+          {/* text-sm→text-base(16px) */}
+          <div className="text-base text-[var(--color-ink-light)]">
             总骨重 {data.totalWeight.toFixed(1)} 两
           </div>
+          {/* text-xs→text-sm(14px) */}
           <span
-            className="inline-block mt-2 px-3 py-0.5 rounded-full text-xs text-white"
+            className="inline-block mt-2 px-3 py-0.5 rounded-full text-sm text-white"
             style={{ backgroundColor: level.color }}
           >
             {level.label}
@@ -57,15 +56,17 @@ export default function ChengGuCard({ data }: ChengGuCardProps) {
           { label: '时', weight: data.hourWeight },
         ].map((item) => (
           <div key={item.label} className="text-center">
-            <div className="text-xs text-[var(--color-ink-light)] mb-1">{item.label}</div>
+            {/* text-xs→text-sm(14px) */}
+            <div className="text-sm text-[var(--color-ink-light)] mb-1">{item.label}</div>
             <div className="bg-[var(--color-parchment)] rounded-lg py-2">
               <span
-                className="text-lg font-bold"
+                className="text-xl font-bold"
                 style={{ color: 'var(--color-primary-dark)' }}
               >
                 {item.weight.toFixed(1)}
               </span>
-              <span className="text-xs text-[var(--color-ink-light)]"> 两</span>
+              {/* text-xs→text-sm(14px) */}
+              <span className="text-sm text-[var(--color-ink-light)]"> 两</span>
             </div>
           </div>
         ))}
@@ -73,16 +74,18 @@ export default function ChengGuCard({ data }: ChengGuCardProps) {
 
       {/* 批语 */}
       <div className="bg-[var(--color-parchment)] rounded-lg p-4 text-center">
-        <div className="text-xs text-[var(--color-ink-light)] mb-2">批语</div>
+        {/* text-xs→text-sm(14px) */}
+        <div className="text-sm text-[var(--color-ink-light)] mb-2">批语</div>
         <p
-          className="text-base leading-relaxed"
+          className="text-lg leading-relaxed"
           style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
         >
           {data.comment}
         </p>
       </div>
 
-      <p className="text-xs text-[var(--color-ink-light)] mt-3 text-center opacity-60">
+      {/* text-xs→text-sm(14px) 免责声明 */}
+      <p className="text-disclaimer mt-3">
         * 称骨论命源自唐代袁天罡，仅供文化研究参考，请勿迷信
       </p>
     </div>

@@ -29,14 +29,15 @@ function DimensionCard({ dim }: { dim: DimensionResult }) {
         <div className="flex items-center gap-2">
           <span className="text-2xl">{dim.icon}</span>
           <span
-            className="text-base font-bold"
+            className="text-lg font-bold"
             style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
           >
             {dim.label}
           </span>
         </div>
+        {/* text-xs→text-sm(14px) */}
         <span
-          className="text-xs px-2 py-0.5 rounded-full font-medium"
+          className="text-sm px-2 py-0.5 rounded-full font-medium"
           style={{
             color: gradeColor.text,
             backgroundColor: gradeColor.bg,
@@ -48,7 +49,8 @@ function DimensionCard({ dim }: { dim: DimensionResult }) {
 
       {/* 分数进度条 */}
       <div className="mb-3">
-        <div className="flex items-center justify-between text-[10px] mb-1">
+        {/* text-[10px]→text-sm(14px) */}
+        <div className="flex items-center justify-between text-sm mb-1">
           <span style={{ color: 'var(--color-ink-light)' }}>综合评分</span>
           <span className="font-bold" style={{ color: gradeColor.text }}>{dim.score}</span>
         </div>
@@ -63,13 +65,13 @@ function DimensionCard({ dim }: { dim: DimensionResult }) {
         </div>
       </div>
 
-      {/* 关键词标签 */}
+      {/* 关键词标签 — text-[10px]→text-sm(14px) */}
       {dim.keywords.length > 0 && (
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="flex flex-wrap gap-1.5 mb-3">
           {dim.keywords.slice(0, 4).map((kw, i) => (
             <span
               key={i}
-              className="text-[10px] px-1.5 py-0.5 rounded"
+              className="text-sm px-2 py-0.5 rounded"
               style={{
                 color: 'var(--color-primary-dark)',
                 backgroundColor: 'var(--color-parchment)',
@@ -81,9 +83,9 @@ function DimensionCard({ dim }: { dim: DimensionResult }) {
         </div>
       )}
 
-      {/* 解读文字 */}
+      {/* 解读文字 — text-xs→text-base(16px) */}
       <p
-        className="text-xs leading-relaxed"
+        className="text-base leading-relaxed"
         style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-ink-light)' }}
       >
         {dim.summary}
@@ -94,9 +96,6 @@ function DimensionCard({ dim }: { dim: DimensionResult }) {
 
 /**
  * 四维分析面板组件
- *
- * 从事业、财运、婚姻、健康四个维度分析命局，
- * 每个维度显示评分、等级、关键词和简要解读。
  */
 export default function AnalysisPanel({ analysis }: AnalysisPanelProps) {
   const dimensions: DimensionResult[] = [
@@ -114,7 +113,7 @@ export default function AnalysisPanel({ analysis }: AnalysisPanelProps) {
   return (
     <div className="card-chinese p-5 md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        <h3 className="section-title" style={{ fontSize: '1.2rem' }}>
+        <h3 className="section-title">
           四维分析
         </h3>
         <div
@@ -124,9 +123,10 @@ export default function AnalysisPanel({ analysis }: AnalysisPanelProps) {
             backgroundColor: 'var(--color-parchment)',
           }}
         >
-          <span className="text-xs" style={{ color: 'var(--color-ink-light)' }}>综合</span>
+          {/* text-xs→text-sm(14px) */}
+          <span className="text-sm" style={{ color: 'var(--color-ink-light)' }}>综合</span>
           <span
-            className="text-lg font-bold"
+            className="text-xl font-bold"
             style={{
               fontFamily: 'var(--font-family-kai)',
               color: avgScore >= 70 ? '#15803D' : avgScore >= 55 ? '#1D4ED8' : '#C2410C',
@@ -134,7 +134,8 @@ export default function AnalysisPanel({ analysis }: AnalysisPanelProps) {
           >
             {avgScore}
           </span>
-          <span className="text-[10px]" style={{ color: 'var(--color-ink-light)' }}>/100</span>
+          {/* text-[10px]→text-sm(14px) */}
+          <span className="text-sm" style={{ color: 'var(--color-ink-light)' }}>/100</span>
         </div>
       </div>
 
@@ -145,8 +146,8 @@ export default function AnalysisPanel({ analysis }: AnalysisPanelProps) {
         ))}
       </div>
 
-      {/* 免责声明 */}
-      <p className="text-[10px] mt-4 text-center opacity-50" style={{ color: 'var(--color-ink-light)' }}>
+      {/* 免责声明 — text-[10px]→14px */}
+      <p className="text-disclaimer mt-4">
         * 四维分析基于八字原局十神分布和五行平衡进行粗略评估，仅供学习参考，不构成任何人生决策建议
       </p>
     </div>

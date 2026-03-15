@@ -40,9 +40,6 @@ const GRADE_COLORS: Record<string, { text: string; bg: string; border: string }>
 
 /**
  * 流年详情面板
- *
- * 点击流年格子后展开，展示「八字+大运+流年」联动分析结果。
- * 包含：基础信息、原局联动、大运联动、核心断语、关键提示。
  */
 export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -71,13 +68,13 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
       >
         <div className="flex items-center gap-3">
           <h4
-            className="text-base font-bold"
+            className="text-lg font-bold"
             style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-cinnabar)' }}
           >
             {analysis.year}年 {analysis.ganZhi} 流年详解
           </h4>
           <span
-            className="text-xs px-2 py-0.5 rounded-full font-medium"
+            className="text-sm px-2 py-0.5 rounded-full font-medium"
             style={{ color: gradeColor.text, backgroundColor: gradeColor.bg, border: `1px solid ${gradeColor.border}` }}
           >
             {analysis.grade} ({analysis.score}分)
@@ -85,7 +82,7 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
         </div>
         <button
           onClick={onClose}
-          className="w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors hover:bg-[var(--color-border-warm)]"
+          className="w-7 h-7 rounded-full flex items-center justify-center text-base transition-colors hover:bg-[var(--color-border-warm)]"
           style={{ color: 'var(--color-ink-light)' }}
           title="收起"
         >
@@ -113,14 +110,15 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
         {/* === 原局联动 === */}
         <section>
           <SectionTitle text="原局联动" />
-          <p className="text-sm mt-2 leading-relaxed" style={{ color: 'var(--color-ink-light)' }}>
+          {/* text-sm→text-base(16px) */}
+          <p className="text-base mt-2 leading-relaxed" style={{ color: 'var(--color-ink-light)' }}>
             {analysis.yuanJuSummary}
           </p>
           <div className="mt-3 space-y-2">
             {analysis.yuanJuRelations.map((rel) => (
               <div
                 key={rel.pillarLabel}
-                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 px-3 py-2 rounded-lg text-xs"
+                className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 px-3 py-2.5 rounded-lg text-sm"
                 style={{ backgroundColor: 'var(--color-parchment)' }}
               >
                 <span
@@ -137,7 +135,7 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
                     {rel.clashOrHarmony.map((ch, i) => (
                       <span
                         key={i}
-                        className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                        className="px-1.5 py-0.5 rounded text-xs font-medium"
                         style={{
                           color: ch.includes('冲') ? '#DC2626' : '#15803D',
                           backgroundColor: ch.includes('冲') ? '#FEF2F2' : '#F0FDF4',
@@ -158,17 +156,18 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
           <SectionTitle text="大运联动" />
           <div className="mt-3 space-y-2">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div className="px-3 py-2 rounded-lg text-xs" style={{ backgroundColor: 'var(--color-parchment)' }}>
+              {/* text-xs→text-sm(14px) */}
+              <div className="px-3 py-2.5 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-parchment)' }}>
                 <span className="font-medium" style={{ color: 'var(--color-primary-dark)' }}>天干互动：</span>
                 <span style={{ color: '#555' }}>{analysis.daYunInteraction.ganInteraction}</span>
               </div>
-              <div className="px-3 py-2 rounded-lg text-xs" style={{ backgroundColor: 'var(--color-parchment)' }}>
+              <div className="px-3 py-2.5 rounded-lg text-sm" style={{ backgroundColor: 'var(--color-parchment)' }}>
                 <span className="font-medium" style={{ color: 'var(--color-primary-dark)' }}>地支互动：</span>
                 <span style={{ color: '#555' }}>{analysis.daYunInteraction.zhiInteraction}</span>
               </div>
             </div>
             <div
-              className="px-3 py-2 rounded-lg text-xs font-medium"
+              className="px-3 py-2.5 rounded-lg text-sm font-medium"
               style={{ color: tendencyColor.text, backgroundColor: tendencyColor.bg }}
             >
               综合倾向：{analysis.daYunInteraction.overallTendency}
@@ -189,10 +188,12 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
                   style={{ backgroundColor: vc.bg, border: `1px solid ${vc.border}` }}
                 >
                   <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-sm">{v.icon}</span>
-                    <span className="text-xs font-bold" style={{ color: vc.text }}>{v.dimension}</span>
+                    <span className="text-base">{v.icon}</span>
+                    {/* text-xs→text-sm(14px) */}
+                    <span className="text-sm font-bold" style={{ color: vc.text }}>{v.dimension}</span>
                   </div>
-                  <p className="text-xs leading-relaxed" style={{ color: vc.text }}>
+                  {/* text-xs→text-sm(14px) */}
+                  <p className="text-sm leading-relaxed" style={{ color: vc.text }}>
                     {v.text}
                   </p>
                 </div>
@@ -211,7 +212,7 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
                 return (
                   <div
                     key={i}
-                    className="flex items-start gap-2 px-3 py-2 rounded-lg text-xs leading-relaxed"
+                    className="flex items-start gap-2 px-3 py-2 rounded-lg text-sm leading-relaxed"
                     style={{ color: tc.text, backgroundColor: tc.bg }}
                   >
                     <span className="shrink-0 font-bold mt-px">{tc.icon}</span>
@@ -224,11 +225,8 @@ export default function LiuNianDetailPanel({ analysis, onClose }: LiuNianDetailP
         )}
       </div>
 
-      {/* 底部提示 */}
-      <div
-        className="px-5 py-2 text-center text-[10px]"
-        style={{ color: 'var(--color-ink-light)', opacity: 0.5, borderTop: '1px solid var(--color-border-warm)' }}
-      >
+      {/* 底部提示 — 10px→14px */}
+      <div className="text-disclaimer px-5 py-2" style={{ borderTop: '1px solid var(--color-border-warm)' }}>
         * 流年分析基于子平八字理论，仅供参考，不构成任何决策建议
       </div>
     </div>
@@ -241,8 +239,9 @@ function SectionTitle({ text }: { text: string }) {
   return (
     <div className="flex items-center gap-2">
       <span className="w-1 h-4 rounded-full" style={{ backgroundColor: 'var(--color-cinnabar)' }} />
+      {/* text-sm→text-base(16px) */}
       <span
-        className="text-sm font-bold"
+        className="text-base font-bold"
         style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
       >
         {text}
@@ -256,7 +255,7 @@ function WxTag({ wx }: { wx: string }) {
   if (!color) return null;
   return (
     <span
-      className="text-[10px] px-1.5 py-0.5 rounded font-medium"
+      className="text-xs px-1.5 py-0.5 rounded font-medium"
       style={{ color: color.text, backgroundColor: color.bg }}
     >
       {wx}
@@ -276,12 +275,13 @@ function InfoCell({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="px-3 py-2 rounded-lg" style={{ backgroundColor: 'var(--color-parchment)' }}>
-      <span className="text-[10px] block" style={{ color: 'var(--color-ink-light)' }}>
+    <div className="px-3 py-2.5 rounded-lg" style={{ backgroundColor: 'var(--color-parchment)' }}>
+      {/* text-[10px]→text-sm(14px) */}
+      <span className="text-sm block" style={{ color: 'var(--color-ink-light)' }}>
         {label}
       </span>
       <span
-        className={`text-sm font-bold block ${highlight ? 'mt-0.5' : ''}`}
+        className={`text-base font-bold block ${highlight ? 'mt-0.5' : ''}`}
         style={{
           fontFamily: highlight ? 'var(--font-family-kai)' : undefined,
           color: highlight ? 'var(--color-primary-dark)' : '#333',

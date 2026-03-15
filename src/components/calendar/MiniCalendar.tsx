@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { getMonthCalendar } from '@/lib/lunar';
 
 interface MiniCalendarProps {
@@ -38,30 +38,30 @@ export default function MiniCalendar({
       <div className="flex items-center justify-between mb-3">
         <button
           onClick={prevMonth}
-          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-parchment)] transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-parchment)] transition-colors text-base"
         >
           ◀
         </button>
         <span
-          className="text-base font-bold"
+          className="text-lg font-bold"
           style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
         >
           {year}年 {month}月
         </span>
         <button
           onClick={nextMonth}
-          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-parchment)] transition-colors"
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-[var(--color-parchment)] transition-colors text-base"
         >
           ▶
         </button>
       </div>
 
-      {/* 星期头 */}
+      {/* 星期头 — text-xs→text-sm(14px) */}
       <div className="grid grid-cols-7 gap-0 mb-1">
         {WEEK_HEADERS.map((w) => (
           <div
             key={w}
-            className="text-center text-xs py-1 font-bold"
+            className="text-center text-sm py-1 font-bold"
             style={{ color: 'var(--color-ink-light)' }}
           >
             {w}
@@ -92,11 +92,13 @@ export default function MiniCalendar({
                     : 'hover:bg-[var(--color-parchment)]'
               }`}
             >
-              <div className={`text-sm font-bold ${isSelected ? 'text-white' : ''}`}>
+              {/* 日期数字 — text-sm→text-base(16px) */}
+              <div className={`text-base font-bold ${isSelected ? 'text-white' : ''}`}>
                 {day.solarDay}
               </div>
+              {/* 农历/节气 — text-[10px]→text-xs(12px) 日历格空间有限 */}
               <div
-                className={`text-[10px] leading-tight truncate ${
+                className={`text-xs leading-tight truncate ${
                   isSelected
                     ? 'text-white/80'
                     : hasJieQi

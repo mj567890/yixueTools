@@ -97,7 +97,8 @@ export default function HomePage() {
         <p className="text-lg text-[var(--color-ink-light)] max-w-2xl mx-auto leading-relaxed">
           传承国学经典 · 融合现代科技
         </p>
-        <p className="text-sm text-[var(--color-ink-light)] mt-2 opacity-70">
+        {/* text-sm→text-base(16px) */}
+        <p className="text-base text-[var(--color-ink-light)] mt-2 opacity-70">
           专业的公农历查询、命理排盘与易学研究工具集
         </p>
         <div className="mt-6 flex items-center justify-center gap-4">
@@ -129,14 +130,16 @@ export default function HomePage() {
                 >
                   {tool.icon}
                 </span>
+                {/* text-base→text-[17px] 卡片标题微调 */}
                 <h3
-                  className="text-base font-bold group-hover:text-[var(--color-cinnabar)] transition-colors"
+                  className="text-[17px] font-bold group-hover:text-[var(--color-cinnabar)] transition-colors"
                   style={{ color: 'var(--color-primary-dark)' }}
                 >
                   {tool.title}
                 </h3>
               </div>
-              <p className="text-sm text-[var(--color-ink-light)] leading-relaxed">
+              {/* text-sm→text-base(16px) */}
+              <p className="text-base text-[var(--color-ink-light)] leading-relaxed">
                 {tool.desc}
               </p>
             </Link>
@@ -168,7 +171,7 @@ export default function HomePage() {
           <div key={item.title} className="text-center p-6">
             <span className="text-3xl mb-3 block">{item.icon}</span>
             <h3
-              className="text-base font-bold mb-2"
+              className="text-[17px] font-bold mb-2"
               style={{
                 fontFamily: 'var(--font-family-kai)',
                 color: 'var(--color-primary-dark)',
@@ -176,7 +179,8 @@ export default function HomePage() {
             >
               {item.title}
             </h3>
-            <p className="text-sm text-[var(--color-ink-light)]">{item.desc}</p>
+            {/* text-sm→text-base(16px) */}
+            <p className="text-base text-[var(--color-ink-light)]">{item.desc}</p>
           </div>
         ))}
       </section>

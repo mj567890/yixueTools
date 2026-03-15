@@ -41,14 +41,14 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* 桌面导航 */}
+          {/* 桌面导航 — text-sm→text-base(16px) */}
           <nav className="hidden lg:flex items-center gap-1">
             {navItems.slice(0, 8).map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-3 py-2 rounded-lg text-sm transition-colors no-underline ${
-                  pathname === item.href
+                className={`px-3 py-2 rounded-lg text-base transition-colors no-underline ${
+                  (pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/')))
                     ? 'bg-[var(--color-cinnabar)] text-white'
                     : 'text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'
                 }`}
@@ -58,15 +58,15 @@ export default function Header() {
             ))}
             {/* 更多菜单 */}
             <div className="relative group">
-              <button className="px-3 py-2 rounded-lg text-sm text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)] transition-colors">
+              <button className="px-3 py-2 rounded-lg text-base text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)] transition-colors">
                 更多 ▾
               </button>
-              <div className="absolute right-0 top-full mt-1 w-36 bg-[var(--color-bg-card)] border border-[var(--color-border-warm)] rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+              <div className="absolute right-0 top-full mt-1 w-40 bg-[var(--color-bg-card)] border border-[var(--color-border-warm)] rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                 {navItems.slice(8).map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`block px-4 py-2 text-sm no-underline transition-colors ${
+                    className={`block px-4 py-2.5 text-[15px] no-underline transition-colors ${
                       pathname === item.href
                         ? 'bg-[var(--color-parchment)] text-[var(--color-cinnabar)]'
                         : 'text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'
@@ -97,7 +97,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* 移动端导航 */}
+      {/* 移动端导航 — text-xs→text-sm(14px) */}
       {mobileOpen && (
         <nav className="lg:hidden border-t border-[var(--color-border-warm)] bg-[var(--color-bg-card)]">
           <div className="grid grid-cols-3 gap-1 p-3">
@@ -106,7 +106,7 @@ export default function Header() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex flex-col items-center gap-1 p-3 rounded-lg text-xs no-underline transition-colors ${
+                className={`flex flex-col items-center gap-1 p-3 rounded-lg text-sm no-underline transition-colors ${
                   pathname === item.href
                     ? 'bg-[var(--color-cinnabar)] text-white'
                     : 'text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'

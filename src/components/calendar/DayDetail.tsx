@@ -22,25 +22,28 @@ function GanZhiPillar({
 
   return (
     <div className="flex flex-col items-center gap-1">
-      <span className="text-xs text-[var(--color-ink-light)]">{label}</span>
+      {/* text-xs→text-sm(14px) */}
+      <span className="text-sm text-[var(--color-ink-light)]">{label}</span>
       <div className="card-chinese !p-3 flex flex-col items-center gap-1 min-w-[70px]">
         <span className={`tag-element ${getWuxingClass(ganWx)}`}>{ganWx}</span>
+        {/* text-xl→text-2xl(24px) 核心数据 */}
         <span
-          className="text-xl font-bold"
+          className="text-2xl font-semibold"
           style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
         >
           {gan}
         </span>
         <hr className="w-8 border-[var(--color-border-warm)]" />
         <span
-          className="text-xl font-bold"
+          className="text-2xl font-semibold"
           style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
         >
           {zhi}
         </span>
         <span className={`tag-element ${getWuxingClass(zhiWx)}`}>{zhiWx}</span>
       </div>
-      <span className="text-xs text-[var(--color-gold)]">{naYin}</span>
+      {/* text-xs→text-sm(14px) 纳音 */}
+      <span className="text-sm text-[var(--color-gold)]">{naYin}</span>
     </div>
   );
 }
@@ -59,19 +62,21 @@ export default function DayDetail({ data }: DayDetailProps) {
               >
                 {data.solarYear}年{data.solarMonth}月{data.solarDay}日
               </span>
-              <span className="text-sm text-[var(--color-ink-light)]">
+              {/* text-sm→text-base(16px) */}
+              <span className="text-base text-[var(--color-ink-light)]">
                 星期{data.solarWeek}
               </span>
             </div>
-            <div className="flex items-center gap-3 text-base">
+            <div className="flex items-center gap-3 text-lg">
               <span style={{ color: 'var(--color-cinnabar)' }}>
                 农历 {data.lunarMonthName}月{data.lunarDayName}
-                {data.isLeapMonth && <span className="text-xs ml-1">(闰)</span>}
+                {data.isLeapMonth && <span className="text-sm ml-1">(闰)</span>}
               </span>
               <span className="text-[var(--color-gold)]">
                 {data.shengXiao}年
               </span>
-              <span className="text-sm text-[var(--color-ink-light)]">
+              {/* text-sm→text-base(16px) */}
+              <span className="text-base text-[var(--color-ink-light)]">
                 {data.xingZuo}座
               </span>
             </div>
@@ -80,14 +85,14 @@ export default function DayDetail({ data }: DayDetailProps) {
           {/* 节气 / 节日 */}
           <div className="text-right">
             {data.currentJieQi && (
-              <div className="text-sm">
+              <div className="text-base">
                 <span className="text-[var(--color-cinnabar)] font-bold">
                   今日节气：{data.currentJieQi}
                 </span>
               </div>
             )}
             {data.nextJieQi && (
-              <div className="text-xs text-[var(--color-ink-light)]">
+              <div className="text-sm text-[var(--color-ink-light)]">
                 下一节气：{data.nextJieQi.name}（{data.nextJieQi.date}）
               </div>
             )}
@@ -96,7 +101,7 @@ export default function DayDetail({ data }: DayDetailProps) {
                 {data.festivals.map((f, i) => (
                   <span
                     key={i}
-                    className="inline-block px-2 py-0.5 rounded text-xs text-white"
+                    className="inline-block px-2 py-0.5 rounded text-sm text-white"
                     style={{ backgroundColor: 'var(--color-cinnabar)' }}
                   >
                     {f}
@@ -112,7 +117,6 @@ export default function DayDetail({ data }: DayDetailProps) {
       <div className="card-chinese p-5">
         <h3
           className="section-title mb-5"
-          style={{ fontSize: '1.1rem' }}
         >
           四柱八字
         </h3>
@@ -128,7 +132,7 @@ export default function DayDetail({ data }: DayDetailProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card-chinese p-5">
           <h3
-            className="text-base font-bold mb-3 flex items-center gap-2"
+            className="text-[17px] font-bold mb-3 flex items-center gap-2"
             style={{ color: 'var(--color-primary-dark)', fontFamily: 'var(--font-family-kai)' }}
           >
             <span className="w-6 h-6 flex items-center justify-center rounded bg-red-100 text-red-600 text-sm">宜</span>
@@ -139,20 +143,20 @@ export default function DayDetail({ data }: DayDetailProps) {
               data.yi.map((item, i) => (
                 <span
                   key={i}
-                  className="inline-block px-2 py-1 rounded text-xs bg-green-50 text-green-700 border border-green-200"
+                  className="inline-block px-2.5 py-1 rounded text-sm bg-green-50 text-green-700 border border-green-200"
                 >
                   {item}
                 </span>
               ))
             ) : (
-              <span className="text-sm text-[var(--color-ink-light)]">无</span>
+              <span className="text-base text-[var(--color-ink-light)]">无</span>
             )}
           </div>
         </div>
 
         <div className="card-chinese p-5">
           <h3
-            className="text-base font-bold mb-3 flex items-center gap-2"
+            className="text-[17px] font-bold mb-3 flex items-center gap-2"
             style={{ color: 'var(--color-primary-dark)', fontFamily: 'var(--font-family-kai)' }}
           >
             <span className="w-6 h-6 flex items-center justify-center rounded bg-gray-100 text-gray-600 text-sm">忌</span>
@@ -163,13 +167,13 @@ export default function DayDetail({ data }: DayDetailProps) {
               data.ji.map((item, i) => (
                 <span
                   key={i}
-                  className="inline-block px-2 py-1 rounded text-xs bg-red-50 text-red-600 border border-red-200"
+                  className="inline-block px-2.5 py-1 rounded text-sm bg-red-50 text-red-600 border border-red-200"
                 >
                   {item}
                 </span>
               ))
             ) : (
-              <span className="text-sm text-[var(--color-ink-light)]">无</span>
+              <span className="text-base text-[var(--color-ink-light)]">无</span>
             )}
           </div>
         </div>
@@ -179,25 +183,25 @@ export default function DayDetail({ data }: DayDetailProps) {
       <div className="card-chinese p-5">
         <h3
           className="section-title mb-4"
-          style={{ fontSize: '1.1rem' }}
         >
           详细信息
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+        {/* text-sm→text-base(16px) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-base">
           <div className="flex gap-2">
-            <span className="text-[var(--color-ink-light)] min-w-[72px]">彭祖百忌：</span>
+            <span className="text-[var(--color-ink-light)] min-w-[80px]">彭祖百忌：</span>
             <span>{data.pengZu}</span>
           </div>
           <div className="flex gap-2">
-            <span className="text-[var(--color-ink-light)] min-w-[72px]">冲煞：</span>
+            <span className="text-[var(--color-ink-light)] min-w-[80px]">冲煞：</span>
             <span>冲{data.chong} 煞{data.sha}</span>
           </div>
           <div className="flex gap-2">
-            <span className="text-[var(--color-ink-light)] min-w-[72px]">胎神方位：</span>
+            <span className="text-[var(--color-ink-light)] min-w-[80px]">胎神方位：</span>
             <span>{data.taiShen}</span>
           </div>
           <div className="flex gap-2">
-            <span className="text-[var(--color-ink-light)] min-w-[72px]">农历年号：</span>
+            <span className="text-[var(--color-ink-light)] min-w-[80px]">农历年号：</span>
             <span>{data.lunarYearName}</span>
           </div>
         </div>

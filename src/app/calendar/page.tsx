@@ -72,7 +72,8 @@ export default function CalendarPage() {
       {/* 标题 */}
       <div className="mb-6">
         <h1 className="section-title text-2xl">公农历查询</h1>
-        <p className="text-sm text-[var(--color-ink-light)] mt-2">
+        {/* text-sm→text-base(16px) */}
+        <p className="text-base text-[var(--color-ink-light)] mt-2">
           支持公历农历互查、四柱八字、纳音五行、节气宜忌、称骨论命
         </p>
       </div>
@@ -81,44 +82,46 @@ export default function CalendarPage() {
       <div className="card-chinese p-4 mb-6">
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">年</label>
+            {/* text-xs→form-label(14px) */}
+            <label className="form-label">年</label>
+            {/* text-sm→form-input(16px) */}
             <input
               type="number"
               value={inputYear}
               onChange={(e) => setInputYear(e.target.value)}
               min={1900}
               max={2100}
-              className="w-24 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+              className="form-input w-24"
             />
           </div>
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">月</label>
+            <label className="form-label">月</label>
             <input
               type="number"
               value={inputMonth}
               onChange={(e) => setInputMonth(e.target.value)}
               min={1}
               max={12}
-              className="w-20 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+              className="form-input w-20"
             />
           </div>
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">日</label>
+            <label className="form-label">日</label>
             <input
               type="number"
               value={inputDay}
               onChange={(e) => setInputDay(e.target.value)}
               min={1}
               max={31}
-              className="w-20 px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+              className="form-input w-20"
             />
           </div>
           <div>
-            <label className="text-xs text-[var(--color-ink-light)] block mb-1">时辰</label>
+            <label className="form-label">时辰</label>
             <select
               value={hour}
               onChange={(e) => setHour(parseInt(e.target.value))}
-              className="px-3 py-2 rounded-lg border border-[var(--color-border-warm)] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-cinnabar)]/30"
+              className="form-input"
             >
               {HOURS.map((h) => (
                 <option key={h.value} value={h.value}>
@@ -127,15 +130,16 @@ export default function CalendarPage() {
               ))}
             </select>
           </div>
-          <button onClick={handleDateSubmit} className="btn-primary text-sm">
+          {/* 按钮已统一 16px，去除 text-sm */}
+          <button onClick={handleDateSubmit} className="btn-primary">
             查询
           </button>
-          <button onClick={handleToday} className="btn-outline text-sm">
+          <button onClick={handleToday} className="btn-outline">
             今天
           </button>
           <button
             onClick={() => setShowChengGu(!showChengGu)}
-            className={`text-sm px-4 py-2 rounded-lg border transition-colors ${
+            className={`text-base px-4 py-2 rounded-lg border transition-colors font-medium ${
               showChengGu
                 ? 'bg-[var(--color-gold)] text-white border-[var(--color-gold)]'
                 : 'border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-white'

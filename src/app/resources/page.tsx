@@ -11,7 +11,8 @@ export default function ResourcesPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="section-title text-2xl mb-2">免费资源</h1>
-      <p className="text-sm text-[var(--color-ink-light)] mb-6">
+      {/* text-sm→text-base(16px) */}
+      <p className="text-base text-[var(--color-ink-light)] mb-6">
         易学经典资料与学习工具，全部免费提供
       </p>
 
@@ -22,23 +23,25 @@ export default function ResourcesPage() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span
-                  className="text-base font-bold"
+                  className="text-[17px] font-bold"
                   style={{ fontFamily: 'var(--font-family-kai)', color: 'var(--color-primary-dark)' }}
                 >
                   {r.title}
                 </span>
-                <span className="text-xs px-1.5 py-0.5 rounded bg-[var(--color-parchment)] text-[var(--color-gold)]">
+                {/* text-xs→text-sm(14px) */}
+                <span className="text-sm px-1.5 py-0.5 rounded bg-[var(--color-parchment)] text-[var(--color-gold)]">
                   {r.type}
                 </span>
               </div>
-              <p className="text-sm text-[var(--color-ink-light)]">{r.desc}</p>
+              {/* text-sm→text-base(16px) */}
+              <p className="text-base text-[var(--color-ink-light)]">{r.desc}</p>
             </div>
           </div>
         ))}
       </div>
 
       <div className="card-chinese p-6 mt-8 text-center">
-        <p className="text-sm text-[var(--color-ink-light)]">
+        <p className="text-base text-[var(--color-ink-light)]">
           资源持续整理上传中，所有内容仅供学习研究使用
         </p>
       </div>

@@ -25,9 +25,6 @@ const PERIOD_COLORS: Record<string, { text: string; bg: string }> = {
 
 /**
  * 维度折叠卡片组件
- *
- * 每个维度解读的通用展示卡片，支持折叠/展开。
- * 包含：标题（五行配色）、核心结论、详细解读、关键结论（金色高亮）、运期参考。
  */
 export default function DimensionCard({ dim, defaultOpen = false }: DimensionCardProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
@@ -50,7 +47,7 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <span
-              className="font-bold text-base"
+              className="font-bold text-lg"
               style={{
                 fontFamily: 'var(--font-family-kai)',
                 color: colors.text,
@@ -58,27 +55,26 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
             >
               {dim.title}
             </span>
-            {/* 五行标签 */}
+            {/* 五行标签 — text-[10px]→text-sm(14px) */}
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded"
+              className="text-sm px-1.5 py-0.5 rounded"
               style={{ color: colors.text, backgroundColor: colors.bg }}
             >
               {dim.colorElement}
             </span>
           </div>
-          {/* 折叠时显示结论摘要 */}
+          {/* 折叠时显示结论摘要 — text-xs→text-sm(14px) */}
           {!isOpen && (
             <p
-              className="text-xs mt-0.5 truncate"
+              className="text-sm mt-0.5 truncate"
               style={{ color: 'var(--color-ink-light)' }}
             >
               {dim.conclusion}
             </p>
           )}
         </div>
-        {/* 展开/折叠指示器 */}
         <span
-          className="text-sm shrink-0 transition-transform"
+          className="text-base shrink-0 transition-transform"
           style={{
             color: 'var(--color-ink-light)',
             transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -99,14 +95,16 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
               borderLeftColor: colors.text,
             }}
           >
+            {/* text-[10px]→text-sm(14px) */}
             <div
-              className="text-[10px] font-bold mb-1"
+              className="text-sm font-bold mb-1"
               style={{ color: colors.text }}
             >
               核心结论
             </div>
+            {/* text-sm→text-base(16px) */}
             <p
-              className="text-sm leading-relaxed"
+              className="text-base leading-relaxed"
               style={{
                 fontFamily: 'var(--font-family-kai)',
                 color: 'var(--color-primary-dark)',
@@ -116,7 +114,7 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
             </p>
           </div>
 
-          {/* 关键结论（金色高亮） */}
+          {/* 关键结论（金色高亮） — text-xs→text-sm(14px) */}
           {dim.highlights.length > 0 && (
             <div className="space-y-1.5">
               {dim.highlights.map((h, i) => {
@@ -124,7 +122,7 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
                 return (
                   <div
                     key={i}
-                    className="flex items-start gap-2 px-3 py-2 rounded-lg text-xs border"
+                    className="flex items-start gap-2 px-3 py-2.5 rounded-lg text-sm border"
                     style={{
                       color: h.type === 'neutral' ? '#B8860B' : hc.text,
                       backgroundColor: h.type === 'neutral' ? '#FFFBEB' : hc.bg,
@@ -141,12 +139,12 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
             </div>
           )}
 
-          {/* 详细解读 */}
+          {/* 详细解读 — text-sm→text-base(16px) */}
           <div className="space-y-2">
             {dim.details.map((text, i) => (
               <p
                 key={i}
-                className="text-sm leading-relaxed"
+                className="text-base leading-relaxed"
                 style={{ color: 'var(--color-ink)' }}
               >
                 {text}
@@ -157,19 +155,21 @@ export default function DimensionCard({ dim, defaultOpen = false }: DimensionCar
           {/* 大运/流年参考 */}
           {dim.periodRefs.length > 0 && (
             <div>
+              {/* text-[10px]→text-sm(14px) */}
               <div
-                className="text-[10px] font-bold mb-2"
+                className="text-sm font-bold mb-2"
                 style={{ color: 'var(--color-ink-light)' }}
               >
                 大运时间参考
               </div>
+              {/* text-[11px]→text-sm(14px) */}
               <div className="flex flex-wrap gap-1.5">
                 {dim.periodRefs.map((ref, i) => {
                   const pc = PERIOD_COLORS[ref.type] || PERIOD_COLORS.neutral;
                   return (
                     <div
                       key={i}
-                      className="text-[11px] px-2 py-1 rounded-lg border"
+                      className="text-sm px-2 py-1 rounded-lg border"
                       style={{
                         color: pc.text,
                         backgroundColor: pc.bg,
