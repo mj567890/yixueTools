@@ -51,3 +51,21 @@ export { CITY_DATABASE, type CityInfo } from './cityDatabase';
 export {
   detectPatterns, generateSummary, generateTips, performQimenAnalysis,
 } from './analysis';
+
+// ==================== 阳盘奇门遁甲 ====================
+
+// 阳盘类型
+export type {
+  JiGongType, YangpanConfig, YangpanJuResult, YangpanPalaceState,
+  YangpanPaiPanResult, ScenarioType, YangpanPalaceAnalysis,
+  ScenarioResult, YangpanAnalysisResult,
+} from './types';
+
+// 阳盘定局
+export { chaiBuJu, zhiRunJu, maoShanJu, determineYangpanJu } from './yangpanJuCalc';
+
+// 阳盘排盘
+export { calculateYangpan } from './yangpanPipeline';
+
+// 阳盘分析
+export { analyzeYangpan } from './yangpanAnalysis';

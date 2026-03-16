@@ -100,7 +100,7 @@ export default function DailyLesson({ keyword, quiz }: DailyLessonProps) {
           {quiz.question}
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2">
           {quiz.options.map((option, idx) => {
             let optionStyle = 'border-[var(--color-border-warm)] hover:border-[var(--color-cinnabar)] hover:bg-[var(--color-cinnabar)]/5';
             if (selectedAnswer !== null) {

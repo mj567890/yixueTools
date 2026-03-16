@@ -166,8 +166,8 @@ const YUE_JIANG_NAMES: Record<string, string> = {
   '卯': '太冲', '寅': '功曹', '丑': '大吉', '子': '神后',
 };
 
-// 外围标注字号（与宫格内部一致）
-const annoFontSize = '22px';
+// 外围标注字号（比宫格内部稍大）
+const annoFontSize = '26px';
 
 /** 顶部/底部标注：月将(红) + 隐干(黑) + 建星(蓝)，横排一行 */
 function ZhiLabel({ zhi, jianChu, yinGan }: { zhi: string; jianChu: string; yinGan?: string }) {
@@ -235,7 +235,7 @@ export default function YinpanPaipanBoard({ data, schoolName }: YinpanPaipanBoar
           ].map(item => (
             <div key={item.label}>
               <div style={{ fontSize: '16px', color: 'var(--color-ink-light)', fontFamily: 'var(--font-family-kai)' }}>{item.label}</div>
-              <div className="ganzhi-char mt-1" style={{ fontSize: '32px', fontWeight: 600 }}>{item.gz}</div>
+              <div className="ganzhi-char mt-1" style={{ fontSize: '26px', fontWeight: 600 }}>{item.gz}</div>
             </div>
           ))}
         </div>
@@ -259,17 +259,17 @@ export default function YinpanPaipanBoard({ data, schoolName }: YinpanPaipanBoar
       {/* 九宫格 + 外围注解 */}
       <div className="card-chinese p-3 md:p-4">
         {/* 图例 */}
-        <div className="flex items-center justify-center gap-4 mb-3" style={{ fontSize: '13px' }}>
-          <span className="flex items-center gap-1">
-            <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', backgroundColor: '#C23B22' }} />
+        <div className="flex items-center justify-center gap-4 mb-3" style={{ fontSize: '16px' }}>
+          <span className="flex items-center gap-1.5">
+            <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#C23B22' }} />
             <span style={{ color: '#666' }}>月将</span>
           </span>
-          <span className="flex items-center gap-1">
-            <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', backgroundColor: '#333' }} />
+          <span className="flex items-center gap-1.5">
+            <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#333' }} />
             <span style={{ color: '#666' }}>隐干</span>
           </span>
-          <span className="flex items-center gap-1">
-            <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', backgroundColor: '#1565C0' }} />
+          <span className="flex items-center gap-1.5">
+            <span style={{ display: 'inline-block', width: 10, height: 10, borderRadius: '50%', backgroundColor: '#1565C0' }} />
             <span style={{ color: '#666' }}>建星</span>
           </span>
         </div>

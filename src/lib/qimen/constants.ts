@@ -522,3 +522,62 @@ export const PATTERN_DEFS: PatternDef[] = [
     check: (h, e) => h === '丙' && e === '庚',
   },
 ];
+
+// ==================== 阳盘奇门遁甲专属常量 ====================
+
+/** 符头天干：甲/己日为符头 */
+export const FUTOU_GAN = ['甲', '己'];
+
+/**
+ * 茅山道人法：旬首→三元映射
+ * 甲子/甲午 → 上元
+ * 甲申/甲辰 → 中元
+ * 甲戌/甲寅 → 下元
+ */
+export const MAOSHAN_YUAN_MAP: Record<string, '上元' | '中元' | '下元'> = {
+  '甲子': '上元', '甲午': '上元',
+  '甲申': '中元', '甲辰': '中元',
+  '甲戌': '下元', '甲寅': '下元',
+};
+
+/** 场景用神配置表 */
+export const SCENARIO_CONFIG: Record<string, {
+  name: string;
+  tiDesc: string;
+  yongDesc: string;
+  yongKey: string;
+}> = {
+  career:  { name: '事业', tiDesc: '日干落宫', yongDesc: '开门落宫', yongKey: '开门' },
+  wealth:  { name: '求财', tiDesc: '日干落宫', yongDesc: '生门落宫', yongKey: '生门' },
+  love:    { name: '婚姻', tiDesc: '日干落宫', yongDesc: '六合落宫', yongKey: '六合' },
+  health:  { name: '健康', tiDesc: '日干落宫', yongDesc: '天芮落宫', yongKey: '天芮' },
+  lawsuit: { name: '诉讼', tiDesc: '日干落宫', yongDesc: '开门+惊门', yongKey: '惊门' },
+  travel:  { name: '出行', tiDesc: '日干落宫', yongDesc: '马星宫', yongKey: '马星' },
+};
+
+/**
+ * 天干入墓宫位映射
+ * 天干五行的墓库：木墓未(2宫)、火墓戌(6宫)、金墓丑(8宫)、水墓辰(4宫)、土墓辰(4宫)
+ */
+export const STEM_MU_PALACE: Record<string, number> = {
+  '甲': 2, '乙': 2,   // 木 → 未(坤2宫)
+  '丙': 6, '丁': 6,   // 火 → 戌(乾6宫)
+  '戊': 4, '己': 4,   // 土 → 辰(巽4宫)
+  '庚': 8, '辛': 8,   // 金 → 丑(艮8宫)
+  '壬': 4, '癸': 4,   // 水 → 辰(巽4宫)
+};
+
+/**
+ * 六仪击刑：六仪在特定宫位受刑
+ * 戊在震3(卯刑卯)、己在乾6(亥刑亥?)、庚在艮8(寅刑巳->不对)
+ * 传统定义：戊+震3(卯自刑)、己+坤2(未刑丑)、庚+艮8(寅刑巳)、
+ *           辛+离9(午自刑)、壬+巽4(辰自刑)、癸+坎1(子自刑)
+ */
+export const LIUYI_JIXING: Record<string, number> = {
+  '戊': 3, // 戊在震3宫(卯)受击刑
+  '己': 6, // 己在乾6宫(亥)受击刑
+  '庚': 7, // 庚在兑7宫(酉)受击刑
+  '辛': 9, // 辛在离9宫(午)受击刑
+  '壬': 4, // 壬在巽4宫(辰)受击刑
+  '癸': 1, // 癸在坎1宫(子)受击刑
+};

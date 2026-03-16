@@ -6,7 +6,6 @@ import { getShiChen } from '@/lib/lunar';
 import type { PersonalBaziInput } from '@/lib/zeji';
 import ZhuShenPanel from './ZhuShenPanel';
 import ShenShaPanel from './ShenShaPanel';
-import DailyLesson from './DailyLesson';
 import DressColor from './DressColor';
 import WeekDressTable from './WeekDressTable';
 
@@ -72,16 +71,25 @@ export default function ZejiSection({ year, month, day }: ZejiSectionProps) {
         xiu={yuxia.xiu}
       />
 
-      {/* 国学小课堂 */}
-      <DailyLesson
-        keyword={yuxia.dailyKeyword}
-        quiz={yuxia.dailyQuiz}
-      />
-
       {/* 免责声明 */}
       <p className="text-disclaimer">
         * 以上内容据《许真君玉匣记》《协纪辩方书》等古籍编纂，旨在普及国学文化，仅供民俗参考，不构成决策依据。传统择吉学说存在多个流派，判定或有差异，读者宜辩证理解。
       </p>
+
+      {/* ── 分隔线 ── */}
+      <div className="relative my-6">
+        <hr className="border-t border-[var(--color-border-warm)]" />
+        <span
+          className="absolute left-1/2 -translate-x-1/2 -top-3 px-4 text-sm tracking-widest"
+          style={{
+            backgroundColor: 'var(--color-bg-warm)',
+            color: 'var(--color-gold)',
+            fontFamily: 'var(--font-family-kai)',
+          }}
+        >
+          穿 衣 指 南
+        </span>
+      </div>
 
       {/* ── 穿衣颜色指南（独立板块） ── */}
       <div className="flex items-center justify-between mt-4">

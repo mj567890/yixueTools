@@ -176,3 +176,163 @@ export interface QimenAnalysis {
   summary: string;
   tips: string[];
 }
+
+// ==================== 阳盘奇门遁甲专属类型 ====================
+
+/** 寄宫类型：2=寄坤二宫, 8=寄艮八宫 */
+export type JiGongType = 2 | 8;
+
+/** 阳盘排盘输入配置 */
+export interface YangpanConfig {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute?: number;
+  /** 定局方法 */
+  method: 'chaiBu' | 'zhiRun' | 'maoShan';
+  /** 寄宫选择：2=寄坤二宫（默认）, 8=寄艮八宫 */
+  jiGong: JiGongType;
+}
+
+/** 阳盘定局结果 */
+export interface YangpanJuResult {
+  /** 阳遁或阴遁 */
+  dunType: '阳遁' | '阴遁';
+  /** 局数 1-9 */
+  juNumber: number;
+  /** 三元 */
+  yuan: '上元' | '中元' | '下元';
+  /** 当前所在节气名 */
+  jieQiName: string;
+  /** 节气精确日期 */
+  jieQiDate: string;
+  /** 符头干支 */
+  fuTou: string;
+  /** 使用的定局法 */
+  method: 'chaiBu' | 'zhiRun' | 'maoShan';
+  /** 是否闰局（置闰法专用） */
+  isRunJu: boolean;
+  /** 距符头天数 */
+  daysSinceFuTou: number;
+  /** 推演过程文字说明（用于展示和调试） */
+  debugInfo: string;
+}
+
+/** 阳盘单宫状态 */
+export interface YangpanPalaceState {
+  palaceId: PalaceId;
+  /** 地盘干 */
+  earthStem: string;
+  /** 天盘干 */
+  heavenStem: string;
+  /** 九星名 */
+  star: string;
+  /** 八门名 */
+  gate: string;
+  /** 八神名 */
+  spirit: string;
+  /** 是否空亡 */
+  isVoid: boolean;
+  /** 是否马星 */
+  isHorse: boolean;
+}
+
+/** 阳盘排盘完整结果 */
+export interface YangpanPaiPanResult {
+  config: YangpanConfig;
+  /** 四柱干支 */
+  ganZhi: { year: string; month: string; day: string; time: string };
+  /** 农历描述 */
+  lunarDesc: string;
+  /** 定局结果 */
+  juResult: YangpanJuResult;
+  /** 当前寄宫 */
+  jiGong: JiGongType;
+  /** 九宫状态（1-9） */
+  palaces: Record<PalaceId, YangpanPalaceState>;
+  /** 值符星名 */
+  zhiFuStar: string;
+  /** 值使门名 */
+  zhiShiGate: string;
+  /** 旬首 */
+  xunShou: string;
+  /** 旬首六仪 */
+  xunShouYin: string;
+  /** 空亡地支对 */
+  voidPair: [string, string];
+  /** 空亡宫位列表 */
+  voidPalaces: number[];
+  /** 马星宫位 */
+  horsePalace: number;
+  /** 时间戳 */
+  timestamp: string;
+}
+
+/** 场景类型 */
+export type ScenarioType = 'career' | 'wealth' | 'love' | 'health' | 'lawsuit' | 'travel';
+
+/** 宫位分析结果 */
+export interface YangpanPalaceAnalysis {
+  palaceId: PalaceId;
+  palaceName: string;
+  palaceWX: WuXing;
+  star: string;
+  starWX: WuXing;
+  starAuspice: string;
+  gate: string;
+  gateWX: WuXing;
+  gateAuspice: string;
+  spirit: string;
+  heavenStem: string;
+  earthStem: string;
+  isVoid: boolean;
+  isHorse: boolean;
+  /** 门迫：宫克门 */
+  isMenPo: boolean;
+  /** 星入墓 */
+  isRuMu: boolean;
+  /** 综合评分 -5 ~ +5 */
+  score: number;
+  /** 评语 */
+  comment: string;
+}
+
+/** 场景分析结果 */
+export interface ScenarioResult {
+  scenarioName: string;
+  tiPalace: number;
+  tiDesc: string;
+  yongPalace: number;
+  yongDesc: string;
+  relation: string;
+  keyFindings: string[];
+  conclusion: string;
+  advice: string[];
+  tendency: '吉' | '凶' | '平';
+}
+
+/** 阳盘综合分析结果 */
+export interface YangpanAnalysisResult {
+  /** 格局列表 */
+  patterns: PatternMatch[];
+  /** 各宫分析 */
+  palaceAnalyses: Record<number, YangpanPalaceAnalysis>;
+  /** 四柱干落宫 */
+  stemLocations: {
+    dayGan: { stem: string; palace: number };
+    timeGan: { stem: string; palace: number };
+    yearGan: { stem: string; palace: number };
+    monthGan: { stem: string; palace: number };
+  };
+  /** 场景分析结果 */
+  scenarioResult?: ScenarioResult;
+  /** 综合判断 */
+  overall: {
+    tendency: '吉' | '凶' | '平';
+    score: number;
+    summary: string;
+    tips: string[];
+    warnings: string[];
+  };
+}

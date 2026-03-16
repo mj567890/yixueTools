@@ -6,6 +6,7 @@ import DayDetail from '@/components/calendar/DayDetail';
 import ChengGuCard from '@/components/calendar/ChengGuCard';
 import CompactBazi from '@/components/calendar/CompactBazi';
 import LuckyDirection from '@/components/calendar/LuckyDirection';
+import DailyLesson from '@/components/calendar/DailyLesson';
 import ZejiSection from '@/components/calendar/ZejiSection';
 import {
   getCalendarInfo,
@@ -13,6 +14,7 @@ import {
   getHourZhi,
   getShiChen,
 } from '@/lib/lunar';
+import { getYuXiaInfo } from '@/lib/yuxia';
 
 const HOURS = Array.from({ length: 12 }, (_, i) => {
   const h = i === 0 ? 23 : (i * 2) - 1;
@@ -25,7 +27,6 @@ export default function CalendarPage() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [day, setDay] = useState(now.getDate());
   const [hour, setHour] = useState(now.getHours());
-  const [showChengGu, setShowChengGu] = useState(false);
 
   // 日期输入
   const [inputYear, setInputYear] = useState(String(year));
@@ -38,7 +39,6 @@ export default function CalendarPage() {
   );
 
   const chengGuData = useMemo(() => {
-    if (!showChengGu) return null;
     const hourZhi = getHourZhi(hour);
     return getChengGu(
       calendarData.yearGanZhi,
@@ -46,7 +46,12 @@ export default function CalendarPage() {
       calendarData.lunarDay,
       hourZhi,
     );
-  }, [showChengGu, calendarData, hour]);
+  }, [calendarData, hour]);
+
+  const yuxiaData = useMemo(
+    () => getYuXiaInfo(year, month, day),
+    [year, month, day],
+  );
 
   const handleDateSubmit = () => {
     const y = parseInt(inputYear);
@@ -75,7 +80,6 @@ export default function CalendarPage() {
       {/* 标题 */}
       <div className="mb-6">
         <h1 className="section-title text-2xl">公农历查询</h1>
-        {/* text-sm→text-base(16px) */}
         <p className="text-base text-[var(--color-ink-light)] mt-2">
           支持公历农历互查、四柱八字、纳音五行、节气宜忌、民俗择吉、穿衣指南
         </p>
@@ -83,11 +87,9 @@ export default function CalendarPage() {
 
       {/* 日期输入区 */}
       <div className="card-chinese p-4 mb-6">
-        <div className="flex flex-wrap items-end gap-3">
+        <div className="flex flex-wrap items-end justify-center gap-3">
           <div>
-            {/* text-xs→form-label(14px) */}
             <label className="form-label">年</label>
-            {/* text-sm→form-input(16px) */}
             <input
               type="number"
               value={inputYear}
@@ -133,22 +135,11 @@ export default function CalendarPage() {
               ))}
             </select>
           </div>
-          {/* 按钮已统一 16px，去除 text-sm */}
           <button onClick={handleDateSubmit} className="btn-primary">
             查询
           </button>
           <button onClick={handleToday} className="btn-outline">
             今天
-          </button>
-          <button
-            onClick={() => setShowChengGu(!showChengGu)}
-            className={`text-base px-4 py-2 rounded-lg border transition-colors font-medium ${
-              showChengGu
-                ? 'bg-[var(--color-gold)] text-white border-[var(--color-gold)]'
-                : 'border-[var(--color-gold)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-white'
-            }`}
-          >
-            称骨论命
           </button>
         </div>
       </div>
@@ -158,8 +149,8 @@ export default function CalendarPage() {
 
       {/* 主内容区 */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* 左侧日历 */}
-        <div className="lg:col-span-4">
+        {/* 左侧：月历 + 吉祥方位 + 称骨论命 + 国学小课堂 */}
+        <div className="lg:col-span-4 space-y-6">
           <MiniCalendar
             year={year}
             month={month}
@@ -175,13 +166,17 @@ export default function CalendarPage() {
               setInputMonth(String(m));
             }}
           />
+          <LuckyDirection dayGan={calendarData.dayGanZhi[0]} />
+          <ChengGuCard data={chengGuData} />
+          <DailyLesson
+            keyword={yuxiaData.dailyKeyword}
+            quiz={yuxiaData.dailyQuiz}
+          />
         </div>
 
         {/* 右侧详情 */}
         <div className="lg:col-span-8 space-y-6">
           <DayDetail data={calendarData} />
-          {showChengGu && chengGuData && <ChengGuCard data={chengGuData} />}
-          <LuckyDirection dayGan={calendarData.dayGanZhi[0]} />
           <ZejiSection
             year={year}
             month={month}
