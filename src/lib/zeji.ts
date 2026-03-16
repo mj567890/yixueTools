@@ -1,14 +1,30 @@
 /**
  * 玉匣择吉 — 吉祥方位、穿衣颜色推荐算法库
- * 基于五行生克关系推算，仅供民俗参考
+ *
+ * 穿衣颜色推荐有两种模式：
+ *
+ * 模式一（通用模式，无八字输入）：
+ *   颜色 = "我"，流日天干五行 = "环境"
+ *   以颜色为主体，看哪种颜色能在当天的天时环境中获益
+ *
+ * 模式二（个人模式，有八字输入）：
+ *   根据日主喜忌五行，结合大运→流年→流月→流日依次作用，
+ *   分析当天对命主最有利的五行颜色
  */
 
-import { WU_XING_MAP, WX_GENERATES, WX_CONTROLS } from './lunar';
+import {
+  WU_XING_MAP, WX_GENERATES, WX_CONTROLS,
+  type BaziResult, type DaYunItem,
+  buildDaYunResult, getBaziResult,
+} from './lunar';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { Solar } = require('lunar-javascript');
 
 // ─── 常量 ────────────────────────────────────────────
+
+const TIAN_GAN = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+const DI_ZHI = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
 /** 五行 → 方位 */
 export const WX_DIRECTION: Record<string, string> = {
@@ -49,27 +65,24 @@ const DIRECTION_SCENES: Record<string, string> = {
 };
 
 const WEEK_NAMES = ['日', '一', '二', '三', '四', '五', '六'];
+const ALL_WX = ['木', '火', '土', '金', '水'];
 
 // ─── 接口 ────────────────────────────────────────────
 
 export interface DressColorItem {
-  /** 分类名：贵人色/进取色/求财色/消耗色/不利色 */
   category: string;
-  /** 五行关系描述：生我/同我/我克/我生/克我 */
   relation: string;
-  /** 对应五行 */
   wuxing: string;
-  /** 具体颜色名 */
   colors: string[];
-  /** 颜色CSS色值 */
   hexColors: string[];
-  /** 说明 */
   description: string;
 }
 
 export interface DailyDressResult {
   dayGan: string;
   dayWuxing: string;
+  mode: 'general' | 'personal';
+  modeLabel: string;
   categories: DressColorItem[];
 }
 
@@ -95,6 +108,15 @@ export interface WeekDressItem {
   avoidHex: string[];
 }
 
+/** 个人八字穿衣推荐的输入参数 */
+export interface PersonalBaziInput {
+  birthYear: number;
+  birthMonth: number;
+  birthDay: number;
+  birthHour: number;
+  gender: number; // 1=男 0=女
+}
+
 // ─── 辅助函数 ────────────────────────────────────────
 
 /** 反向查找：谁生了 target（WX_GENERATES[?] === target） */
@@ -113,6 +135,13 @@ function findWhoControls(target: string): string {
   return '';
 }
 
+/** 获取干支的年干支 */
+function getYearGanZhi(year: number): string {
+  const ganIndex = (year - 4) % 10;
+  const zhiIndex = (year - 4) % 12;
+  return TIAN_GAN[ganIndex] + DI_ZHI[zhiIndex];
+}
+
 // ─── 核心函数 ────────────────────────────────────────
 
 /**
@@ -126,64 +155,246 @@ export function getDayGanZhiByDate(year: number, month: number, day: number): { 
 }
 
 /**
- * 每日穿衣颜色推荐
- * 基于日主五行的五种生克关系推导
+ * 获取指定日期的月干支
+ */
+function getMonthGanZhi(year: number, month: number, day: number): string {
+  const solar = Solar.fromYmd(year, month, day);
+  const lunar = solar.getLunar();
+  const ec = lunar.getEightChar();
+  return ec.getMonthGan() + ec.getMonthZhi();
+}
+
+// ─── 模式一：通用穿衣推荐（颜色="我"，流日="环境"）───────
+
+/**
+ * 通用穿衣颜色推荐
+ *
+ * 核心视角：颜色 = "我"（穿衣的主体），流日天干五行 = "环境"
+ * 哪种颜色在当天的环境中能得到助力，就是好颜色
  */
 export function getDailyDress(dayGan: string): DailyDressResult {
-  const dayWx = WU_XING_MAP[dayGan] || '木';
+  const envWx = WU_XING_MAP[dayGan] || '木'; // 流日五行 = 环境
 
-  // 五行关系
-  const shengWo = findWhoGenerates(dayWx);   // 生我 → 贵人色
-  const tongWo = dayWx;                       // 同我 → 进取色
-  const woKe = WX_CONTROLS[dayWx] || '';      // 我克 → 求财色
-  const woSheng = WX_GENERATES[dayWx] || '';  // 我生 → 消耗色
-  const keWo = findWhoControls(dayWx);        // 克我 → 不利色
+  // 以颜色（五行）为"我"，看与环境的关系
+  // 环境生我 → 颜色得天时滋养 → 大吉
+  const envShengWo = WX_GENERATES[envWx] || '';
+  // 与环境同 → 颜色与天时和谐 → 吉
+  const tongEnv = envWx;
+  // 我克环境 → 颜色能驾驭天时 → 小吉
+  const woKeEnv = findWhoControls(envWx);
+  // 我生环境 → 颜色被天时泄气 → 消耗
+  const woShengEnv = findWhoGenerates(envWx);
+  // 环境克我 → 颜色被天时压制 → 凶
+  const envKeWo = WX_CONTROLS[envWx] || '';
 
   const categories: DressColorItem[] = [
     {
-      category: '贵人色',
-      relation: '生我',
-      wuxing: shengWo,
-      colors: WX_DETAIL_COLORS[shengWo] || [],
-      hexColors: WX_COLOR_HEX[shengWo] || [],
-      description: `${shengWo}生${dayWx}，得贵人相助，大吉`,
+      category: '得时色',
+      relation: '环境生我',
+      wuxing: envShengWo,
+      colors: WX_DETAIL_COLORS[envShengWo] || [],
+      hexColors: WX_COLOR_HEX[envShengWo] || [],
+      description: `今日${envWx}气当令，${envWx}生${envShengWo}，穿${envShengWo}色得天时滋养，大吉`,
+    },
+    {
+      category: '和谐色',
+      relation: '与环境同',
+      wuxing: tongEnv,
+      colors: WX_DETAIL_COLORS[tongEnv] || [],
+      hexColors: WX_COLOR_HEX[tongEnv] || [],
+      description: `与今日${envWx}气相同，顺应天时，吉`,
     },
     {
       category: '进取色',
-      relation: '同我',
-      wuxing: tongWo,
-      colors: WX_DETAIL_COLORS[tongWo] || [],
-      hexColors: WX_COLOR_HEX[tongWo] || [],
-      description: `与日主${dayWx}同属，旺自身之气，吉`,
-    },
-    {
-      category: '求财色',
-      relation: '我克',
-      wuxing: woKe,
-      colors: WX_DETAIL_COLORS[woKe] || [],
-      hexColors: WX_COLOR_HEX[woKe] || [],
-      description: `${dayWx}克${woKe}，主求财有利，小吉`,
+      relation: '我克环境',
+      wuxing: woKeEnv,
+      colors: WX_DETAIL_COLORS[woKeEnv] || [],
+      hexColors: WX_COLOR_HEX[woKeEnv] || [],
+      description: `${woKeEnv}克${envWx}，颜色能驾驭天时，利主动进取，小吉`,
     },
     {
       category: '消耗色',
-      relation: '我生',
-      wuxing: woSheng,
-      colors: WX_DETAIL_COLORS[woSheng] || [],
-      hexColors: WX_COLOR_HEX[woSheng] || [],
-      description: `${dayWx}生${woSheng}，泄自身之气，平`,
+      relation: '我生环境',
+      wuxing: woShengEnv,
+      colors: WX_DETAIL_COLORS[woShengEnv] || [],
+      hexColors: WX_COLOR_HEX[woShengEnv] || [],
+      description: `${woShengEnv}生${envWx}，颜色泄气于天时，耗费精力，平`,
     },
     {
       category: '不利色',
-      relation: '克我',
-      wuxing: keWo,
-      colors: WX_DETAIL_COLORS[keWo] || [],
-      hexColors: WX_COLOR_HEX[keWo] || [],
-      description: `${keWo}克${dayWx}，受克不利，凶`,
+      relation: '环境克我',
+      wuxing: envKeWo,
+      colors: WX_DETAIL_COLORS[envKeWo] || [],
+      hexColors: WX_COLOR_HEX[envKeWo] || [],
+      description: `${envWx}克${envKeWo}，颜色被天时压制，不利`,
     },
   ];
 
-  return { dayGan, dayWuxing: dayWx, categories };
+  return { dayGan, dayWuxing: envWx, mode: 'general', modeLabel: '通用推荐', categories };
 }
+
+// ─── 模式二：个人八字穿衣推荐 ───────────────────────
+
+/**
+ * 根据日主喜忌五行，计算当天最有利的穿衣颜色
+ *
+ * 核心逻辑：
+ * 1. 排命主八字 → 判断日主强弱 → 确定喜用神/忌神五行
+ * 2. 获取当前大运天干地支五行
+ * 3. 获取流年、流月、流日天干五行
+ * 4. 综合分析当天五行能量场，结合喜忌给出推荐
+ */
+export function getPersonalDailyDress(
+  bazi: PersonalBaziInput,
+  targetYear: number,
+  targetMonth: number,
+  targetDay: number,
+): DailyDressResult {
+  // 1. 排命主八字
+  const baziResult = getBaziResult(bazi.birthYear, bazi.birthMonth, bazi.birthDay, bazi.birthHour);
+  const dayGan = baziResult.pillars[2].gan;
+  const dayWx = WU_XING_MAP[dayGan];
+  const strength = baziResult.wuxingAnalysis.dayMasterStrength;
+
+  // 2. 确定喜用神/忌神五行
+  const genMe = ALL_WX.find(e => WX_GENERATES[e] === dayWx) || '';
+  const iGenerate = WX_GENERATES[dayWx] || '';
+  const iControl = WX_CONTROLS[dayWx] || '';
+  const controlsMe = ALL_WX.find(e => WX_CONTROLS[e] === dayWx) || '';
+
+  let yongShen: string[] = [];
+  let jiShen: string[] = [];
+  if (strength === '偏弱') {
+    yongShen = [dayWx, genMe].filter(Boolean);
+    jiShen = [iGenerate, iControl, controlsMe].filter(Boolean);
+  } else if (strength === '偏强') {
+    yongShen = [iGenerate, iControl, controlsMe].filter(Boolean);
+    jiShen = [dayWx, genMe].filter(Boolean);
+  } else {
+    // 中和：轻微喜泄耗
+    yongShen = [iGenerate, dayWx].filter(Boolean);
+    jiShen = [];
+  }
+
+  // 3. 计算大运
+  const dyResult = buildDaYunResult(
+    bazi.birthYear, bazi.birthMonth, bazi.birthDay, bazi.birthHour,
+    bazi.gender, baziResult,
+  );
+  const currentAge = targetYear - bazi.birthYear;
+  let currentDaYun: DaYunItem | null = null;
+  for (const dy of dyResult.daYunList) {
+    if (currentAge >= dy.startAge && currentAge <= dy.endAge) {
+      currentDaYun = dy;
+      break;
+    }
+  }
+
+  // 4. 获取流年、流月、流日
+  const liuNianGZ = getYearGanZhi(targetYear);
+  const liuNianWx = WU_XING_MAP[liuNianGZ[0]];
+  const liuYueGZ = getMonthGanZhi(targetYear, targetMonth, targetDay);
+  const liuYueWx = WU_XING_MAP[liuYueGZ[0]];
+  const { gan: liuRiGan } = getDayGanZhiByDate(targetYear, targetMonth, targetDay);
+  const liuRiWx = WU_XING_MAP[liuRiGan];
+
+  // 5. 综合评分：对每种五行颜色打分
+  const wxScores: Record<string, number> = {};
+  for (const wx of ALL_WX) {
+    let score = 0;
+
+    // 基础分：喜用神 +4，忌神 -4
+    if (yongShen.includes(wx)) score += 4;
+    else if (jiShen.includes(wx)) score -= 4;
+
+    // 大运天干五行的影响（大运管10年，影响最广）
+    if (currentDaYun) {
+      const dyGanWx = currentDaYun.ganWuxing;
+      // 大运五行生此颜色五行 → 该颜色得大运助力 +1.5
+      if (WX_GENERATES[dyGanWx] === wx) score += 1.5;
+      // 大运五行克此颜色五行 → 该颜色受大运压制 -1
+      if (WX_CONTROLS[dyGanWx] === wx) score -= 1;
+      // 大运五行与喜用同 → 整体环境利此方向 +0.5
+      if (yongShen.includes(dyGanWx) && yongShen.includes(wx)) score += 0.5;
+    }
+
+    // 流年天干五行的影响
+    if (WX_GENERATES[liuNianWx] === wx) score += 1;
+    if (WX_CONTROLS[liuNianWx] === wx) score -= 0.5;
+
+    // 流月天干五行的影响
+    if (WX_GENERATES[liuYueWx] === wx) score += 0.8;
+    if (WX_CONTROLS[liuYueWx] === wx) score -= 0.4;
+
+    // 流日天干五行的影响（最近的力量，加权较高）
+    if (WX_GENERATES[liuRiWx] === wx) score += 1.2;
+    if (WX_CONTROLS[liuRiWx] === wx) score -= 0.8;
+    if (liuRiWx === wx) score += 0.5; // 流日与颜色同五行，得天时
+
+    wxScores[wx] = Math.round(score * 10) / 10;
+  }
+
+  // 6. 按分数排序，生成推荐列表
+  const sorted = ALL_WX.slice().sort((a, b) => wxScores[b] - wxScores[a]);
+
+  const gradeLabel = (score: number): string => {
+    if (score >= 4) return '大吉';
+    if (score >= 2) return '吉';
+    if (score >= 0) return '平';
+    if (score >= -2) return '不利';
+    return '凶';
+  };
+
+  const categoryLabel = (rank: number, score: number): string => {
+    if (rank === 0) return '最佳色';
+    if (rank === 1) return '次吉色';
+    if (score >= 0) return '可选色';
+    if (rank >= 4) return '忌穿色';
+    return '消耗色';
+  };
+
+  // 构建描述
+  const daYunDesc = currentDaYun ? `大运${currentDaYun.ganZhi}(${currentDaYun.ganWuxing})` : '大运未知';
+  const baseDesc = `日主${dayGan}属${dayWx}，${strength}，${daYunDesc}`;
+
+  const categories: DressColorItem[] = sorted.map((wx, i) => {
+    const score = wxScores[wx];
+    const grade = gradeLabel(score);
+    const cat = categoryLabel(i, score);
+
+    let desc = '';
+    if (i === 0) {
+      desc = `${baseDesc}。${wx}为喜用，今日流日${liuRiGan}(${liuRiWx})助力，${grade}`;
+    } else if (i <= 1) {
+      desc = `${wx}${yongShen.includes(wx) ? '为喜用' : '得天时'}，${grade}`;
+    } else if (score >= 0) {
+      desc = `${wx}今日表现平稳`;
+    } else if (i >= 4) {
+      desc = `${wx}${jiShen.includes(wx) ? '为忌神' : '受压制'}，不宜穿着`;
+    } else {
+      desc = `${wx}今日能量偏弱，消耗`;
+    }
+
+    return {
+      category: cat,
+      relation: `${grade}(${score > 0 ? '+' : ''}${score})`,
+      wuxing: wx,
+      colors: WX_DETAIL_COLORS[wx] || [],
+      hexColors: WX_COLOR_HEX[wx] || [],
+      description: desc,
+    };
+  });
+
+  return {
+    dayGan: liuRiGan,
+    dayWuxing: liuRiWx,
+    mode: 'personal',
+    modeLabel: `个人推荐（日主${dayGan}${dayWx}·${strength}）`,
+    categories,
+  };
+}
+
+// ─── 方位推算 ────────────────────────────────────────
 
 /**
  * 每日吉祥方位推算
@@ -220,8 +431,10 @@ export function getLuckyDirections(dayGan: string): LuckyDirectionResult {
   return { directions, caiShen };
 }
 
+// ─── 7日穿衣推荐 ────────────────────────────────────
+
 /**
- * 7日穿衣颜色预测
+ * 7日穿衣颜色推荐（通用模式）
  */
 export function getWeekDress(year: number, month: number, day: number): WeekDressItem[] {
   const result: WeekDressItem[] = [];
@@ -233,17 +446,16 @@ export function getWeekDress(year: number, month: number, day: number): WeekDres
     const dd = d.getDate();
     const w = d.getDay();
 
-    const { gan, ganZhi: _gz } = getDayGanZhiByDate(y, m, dd);
+    const { gan } = getDayGanZhiByDate(y, m, dd);
     const dress = getDailyDress(gan);
 
-    // 推荐色 = 贵人色 + 进取色的第一个
     const bestColors: string[] = [];
     const bestHex: string[] = [];
     const avoidColors: string[] = [];
     const avoidHex: string[] = [];
 
     for (const cat of dress.categories) {
-      if (cat.category === '贵人色' || cat.category === '进取色') {
+      if (cat.category === '得时色' || cat.category === '和谐色') {
         if (cat.colors.length > 0) {
           bestColors.push(cat.colors[0]);
           bestHex.push(cat.hexColors[0] || '');
@@ -260,6 +472,58 @@ export function getWeekDress(year: number, month: number, day: number): WeekDres
     result.push({
       date: `${m}月${dd}日 周${WEEK_NAMES[w]}`,
       dayGan: gan,
+      dayWuxing: dress.dayWuxing,
+      bestColors,
+      bestHex,
+      avoidColors,
+      avoidHex,
+    });
+  }
+
+  return result;
+}
+
+/**
+ * 7日穿衣颜色推荐（个人八字模式）
+ */
+export function getWeekDressPersonal(
+  bazi: PersonalBaziInput,
+  year: number, month: number, day: number,
+): WeekDressItem[] {
+  const result: WeekDressItem[] = [];
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(year, month - 1, day + i);
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    const dd = d.getDate();
+    const w = d.getDay();
+
+    const dress = getPersonalDailyDress(bazi, y, m, dd);
+
+    const bestColors: string[] = [];
+    const bestHex: string[] = [];
+    const avoidColors: string[] = [];
+    const avoidHex: string[] = [];
+
+    for (const cat of dress.categories) {
+      if (cat.category === '最佳色' || cat.category === '次吉色') {
+        if (cat.colors.length > 0) {
+          bestColors.push(cat.colors[0]);
+          bestHex.push(cat.hexColors[0] || '');
+        }
+      }
+      if (cat.category === '忌穿色') {
+        if (cat.colors.length > 0) {
+          avoidColors.push(cat.colors[0]);
+          avoidHex.push(cat.hexColors[0] || '');
+        }
+      }
+    }
+
+    result.push({
+      date: `${m}月${dd}日 周${WEEK_NAMES[w]}`,
+      dayGan: dress.dayGan,
       dayWuxing: dress.dayWuxing,
       bestColors,
       bestHex,

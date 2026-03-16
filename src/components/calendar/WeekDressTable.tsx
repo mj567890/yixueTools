@@ -1,16 +1,22 @@
 'use client';
 
 import { useMemo } from 'react';
-import { getWeekDress } from '@/lib/zeji';
+import { getWeekDress, getWeekDressPersonal, type PersonalBaziInput } from '@/lib/zeji';
 
 interface WeekDressTableProps {
   year: number;
   month: number;
   day: number;
+  bazi?: PersonalBaziInput | null;
 }
 
-export default function WeekDressTable({ year, month, day }: WeekDressTableProps) {
-  const weekData = useMemo(() => getWeekDress(year, month, day), [year, month, day]);
+export default function WeekDressTable({ year, month, day, bazi }: WeekDressTableProps) {
+  const weekData = useMemo(() => {
+    if (bazi) {
+      return getWeekDressPersonal(bazi, year, month, day);
+    }
+    return getWeekDress(year, month, day);
+  }, [year, month, day, bazi]);
 
   return (
     <div className="card-chinese p-4">
@@ -20,6 +26,11 @@ export default function WeekDressTable({ year, month, day }: WeekDressTableProps
       >
         <span>📅</span>
         近7日穿衣颜色预测
+        {bazi && (
+          <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-[var(--color-cinnabar)]/10 text-[var(--color-cinnabar)]">
+            个人定制
+          </span>
+        )}
       </h4>
 
       {/* 桌面端表格 */}

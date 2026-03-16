@@ -1,22 +1,35 @@
 'use client';
 
 import { useMemo } from 'react';
-import { getDailyDress } from '@/lib/zeji';
+import { getDailyDress, getPersonalDailyDress, type PersonalBaziInput } from '@/lib/zeji';
 
 interface DressColorProps {
   dayGan: string;
+  targetYear: number;
+  targetMonth: number;
+  targetDay: number;
+  bazi?: PersonalBaziInput | null;
 }
 
 const CATEGORY_ICONS: Record<string, string> = {
-  '贵人色': '👑',
+  '得时色': '☀️',
+  '和谐色': '🤝',
   '进取色': '🚀',
-  '求财色': '💰',
   '消耗色': '💧',
   '不利色': '⚠️',
+  '最佳色': '👑',
+  '次吉色': '🌟',
+  '可选色': '👍',
+  '忌穿色': '⛔',
 };
 
-export default function DressColor({ dayGan }: DressColorProps) {
-  const result = useMemo(() => getDailyDress(dayGan), [dayGan]);
+export default function DressColor({ dayGan, targetYear, targetMonth, targetDay, bazi }: DressColorProps) {
+  const result = useMemo(() => {
+    if (bazi) {
+      return getPersonalDailyDress(bazi, targetYear, targetMonth, targetDay);
+    }
+    return getDailyDress(dayGan);
+  }, [dayGan, targetYear, targetMonth, targetDay, bazi]);
 
   return (
     <div className="card-chinese p-4">
@@ -26,15 +39,28 @@ export default function DressColor({ dayGan }: DressColorProps) {
       >
         <span>👔</span>
         每日穿衣颜色
+        {result.mode === 'personal' && (
+          <span className="text-xs font-normal px-2 py-0.5 rounded-full bg-[var(--color-cinnabar)]/10 text-[var(--color-cinnabar)]">
+            个人定制
+          </span>
+        )}
       </h4>
 
       <div className="text-sm text-[var(--color-ink-light)] mb-3">
-        今日日主五行：<span className="font-semibold" style={{ color: 'var(--color-primary-dark)' }}>{result.dayWuxing}</span>
+        {result.mode === 'personal' ? (
+          <span>{result.modeLabel}</span>
+        ) : (
+          <span>
+            今日流日五行：
+            <span className="font-semibold" style={{ color: 'var(--color-primary-dark)' }}>{result.dayGan}({result.dayWuxing})</span>
+            <span className="ml-2 text-xs">— 颜色为"我"，天时为"环境"</span>
+          </span>
+        )}
       </div>
 
       <div className="space-y-2.5">
         {result.categories.map((cat, i) => {
-          const isAvoid = cat.category === '不利色';
+          const isAvoid = cat.category === '不利色' || cat.category === '忌穿色';
           const isDrain = cat.category === '消耗色';
           return (
             <div
@@ -44,7 +70,7 @@ export default function DressColor({ dayGan }: DressColorProps) {
               }`}
             >
               <div className="flex items-center gap-2 min-w-[120px]">
-                <span className="text-sm">{CATEGORY_ICONS[cat.category] || ''}</span>
+                <span className="text-sm">{CATEGORY_ICONS[cat.category] || '•'}</span>
                 <span className={`text-sm font-semibold ${isAvoid ? 'text-gray-500' : ''}`}>
                   {cat.category}
                 </span>

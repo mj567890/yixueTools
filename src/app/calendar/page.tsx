@@ -5,6 +5,7 @@ import MiniCalendar from '@/components/calendar/MiniCalendar';
 import DayDetail from '@/components/calendar/DayDetail';
 import ChengGuCard from '@/components/calendar/ChengGuCard';
 import CompactBazi from '@/components/calendar/CompactBazi';
+import LuckyDirection from '@/components/calendar/LuckyDirection';
 import ZejiSection from '@/components/calendar/ZejiSection';
 import {
   getCalendarInfo,
@@ -177,9 +178,10 @@ export default function CalendarPage() {
         </div>
 
         {/* 右侧详情 */}
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-8 space-y-6">
           <DayDetail data={calendarData} />
           {showChengGu && chengGuData && <ChengGuCard data={chengGuData} />}
+          <LuckyDirection dayGan={calendarData.dayGanZhi[0]} />
           <ZejiSection
             year={year}
             month={month}
