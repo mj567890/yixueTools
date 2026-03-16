@@ -1,0 +1,64 @@
+import Link from 'next/link';
+
+export default function AboutPage() {
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-12">
+      {/* 标题 */}
+      <div className="text-center mb-10">
+        <h1
+          className="text-3xl md:text-4xl font-bold mb-3 tracking-wide"
+          style={{
+            fontFamily: 'var(--font-family-kai)',
+            color: 'var(--color-primary-dark)',
+          }}
+        >
+          关于嘉嘉易学工具箱
+        </h1>
+        <div
+          className="w-20 h-0.5 mx-auto rounded-full"
+          style={{ backgroundColor: 'var(--color-cinnabar)' }}
+        />
+      </div>
+
+      {/* 正文 */}
+      <div className="card-chinese p-8 md:p-10 space-y-6">
+        <p className="text-base text-[var(--color-ink)] leading-[1.9]" style={{ textIndent: '2em' }}>
+          嘉嘉易学工具箱，源自 2006 年我最初编写的「嘉嘉易学万年历」，后更名为「嘉嘉易学工具箱」，是一款运行于 Windows 桌面的万年历与排盘工具。
+        </p>
+        <p className="text-base text-[var(--color-ink)] leading-[1.9]" style={{ textIndent: '2em' }}>
+          受限于当年资料有限、技术条件简陋，软件底层节气运算存在一些误差。时隔二十年，编程环境与技术能力已今非昔比。如今，我借助全新开发库对软件进行重制，完善当年未能完成的功能模块，也算为这段岁月画上一个圆满的句号，致敬那段青涩而专注的青春。
+        </p>
+        <p className="text-base text-[var(--color-ink)] leading-[1.9]" style={{ textIndent: '2em' }}>
+          本软件完全免费。若您觉得有所帮助，又不愿无故接受馈赠，可前往韩红爱心慈善基金会略尽绵薄之力，让我们一同以微光汇聚善意。
+        </p>
+
+        {/* 捐赠链接 */}
+        <div className="flex justify-center pt-4">
+          <a
+            href="https://www.hhax.org/owe/lovedonate?typeGuid=donateType"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-white text-sm font-medium no-underline transition-opacity hover:opacity-90"
+            style={{ backgroundColor: 'var(--color-cinnabar)' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            韩红爱心慈善基金会
+          </a>
+        </div>
+      </div>
+
+      {/* 底部导航 */}
+      <div className="text-center mt-10">
+        <Link
+          href="/"
+          className="text-sm no-underline transition-colors hover:underline"
+          style={{ color: 'var(--color-cinnabar)' }}
+        >
+          &larr; 返回首页
+        </Link>
+      </div>
+    </div>
+  );
+}

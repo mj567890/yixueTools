@@ -50,27 +50,6 @@ const tools = [
     desc: '结合五格、三才、生辰八字进行姓名吉凶分析',
     color: '#00695C',
   },
-  {
-    href: '/notes',
-    icon: '📒',
-    title: '我的笔记',
-    desc: '本地存储学习笔记，记录易学心得与排盘案例',
-    color: '#F57F17',
-  },
-  {
-    href: '/blog',
-    icon: '📖',
-    title: '易学博客',
-    desc: '精选易学文章、经典解读与学习资料',
-    color: '#AD1457',
-  },
-  {
-    href: '/resources',
-    icon: '🎁',
-    title: '免费资源',
-    desc: '易学经典电子书、视频教程、学习资料下载',
-    color: '#283593',
-  },
 ];
 
 export default function HomePage() {
@@ -98,8 +77,8 @@ export default function HomePage() {
           <Link href="/calendar" className="btn-primary no-underline">
             开始查询
           </Link>
-          <Link href="/resources" className="btn-outline no-underline">
-            学习资源
+          <Link href="/about" className="btn-outline no-underline">
+            关于
           </Link>
         </div>
       </section>

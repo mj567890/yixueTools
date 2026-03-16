@@ -13,9 +13,7 @@ const navItems = [
   { href: '/liuyao', label: '六爻排盘', icon: '⚊' },
   { href: '/taiyi', label: '太乙排盘', icon: '☯' },
   { href: '/naming', label: '起名测名', icon: '✍' },
-  { href: '/notes', label: '我的笔记', icon: '📒' },
-  { href: '/blog', label: '易学博客', icon: '📖' },
-  { href: '/resources', label: '免费资源', icon: '🎁' },
+  { href: '/about', label: '关于', icon: '💡' },
 ];
 
 export default function Header() {
@@ -40,9 +38,9 @@ export default function Header() {
             </span>
           </Link>
 
-          {/* 桌面导航 — text-sm→text-base(16px) */}
+          {/* 桌面导航 */}
           <nav className="hidden lg:flex items-center gap-1">
-            {navItems.slice(0, 8).map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -55,28 +53,6 @@ export default function Header() {
                 {item.label}
               </Link>
             ))}
-            {/* 更多菜单 */}
-            <div className="relative group">
-              <button className="px-3 py-2 rounded-lg text-base text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)] transition-colors">
-                更多 ▾
-              </button>
-              <div className="absolute right-0 top-full mt-1 w-40 bg-[var(--color-bg-card)] border border-[var(--color-border-warm)] rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                {navItems.slice(8).map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`block px-4 py-2.5 text-[15px] no-underline transition-colors ${
-                      pathname === item.href
-                        ? 'bg-[var(--color-parchment)] text-[var(--color-cinnabar)]'
-                        : 'text-[var(--color-ink-light)] hover:bg-[var(--color-parchment)]'
-                    }`}
-                  >
-                    <span className="mr-2">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
           </nav>
 
           {/* 移动端菜单按钮 */}
