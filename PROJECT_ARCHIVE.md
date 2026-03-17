@@ -1,8 +1,8 @@
 # 嘉嘉易学工具箱 — 项目开发归档文档
 
-> **归档版本：V1.1**
-> **归档时间：2026-03-13**
-> **覆盖开发阶段：八字排盘核心 + 大运流年 + 四维分析与五行力量图 + 十维度命局解读 + 流年联动详解**
+> **归档版本：V6.0**
+> **归档时间：2026-03-17**
+> **覆盖开发阶段：八字排盘核心 + 大运流年 + 四维分析与五行力量图 + 十维度命局解读 + 流年联动详解 + 玉匣择吉 + 穿衣指南 + 梅花易数 + 奇门遁甲(阴盘+阳盘) + 六爻纳甲 + 太乙神数 + 起名测名 + API v1 系统 + AI Skills 基础设施**
 
 ---
 
@@ -113,19 +113,36 @@ src/
 │   ├── globals.css             # 全局主题变量 + 组件样式类
 │   ├── page.tsx                # 首页（工具导航卡片网格）
 │   ├── bazi/page.tsx           # 八字排盘页面（表单+标签页切换）
-│   ├── calendar/page.tsx       # 公农历查询页面
-│   ├── meihua/page.tsx         # 梅花易数（待开发）
-│   ├── qimen/page.tsx          # 奇门遁甲（待开发）
-│   ├── liuyao/page.tsx         # 六爻排盘（待开发）
-│   ├── taiyi/page.tsx          # 太乙神数（待开发）
-│   ├── zhaoji/page.tsx         # 玉匣择吉（待开发）
-│   ├── naming/page.tsx         # 起名测名（待开发）
+│   ├── calendar/page.tsx       # 玉匣通书页面（公农历+择吉+穿衣指南）
+│   ├── meihua/page.tsx         # 梅花易数页面
+│   ├── liuyao/page.tsx         # 六爻纳甲排盘页面
+│   ├── taiyi/page.tsx          # 太乙神数排盘页面
+│   ├── naming/page.tsx         # 起名测名页面
+│   ├── docs/page.tsx           # 开发文档页面（API手册+AI Skills接入指南）
+│   ├── about/page.tsx          # 关于页面
+│   ├── qimen/
+│   │   ├── lucking/page.tsx    # 阴盘奇门排盘页
+│   │   └── yangpan/page.tsx    # 阳盘奇门排盘页
+│   ├── .well-known/
+│   │   └── ai-plugin.json/route.ts  # AI 平台发现清单
+│   ├── api/v1/
+│   │   ├── _shared.ts          # API 公共工具函数（响应封装、参数校验）
+│   │   ├── health/route.ts     # 健康检查端点
+│   │   ├── openapi.json/route.ts # OpenAPI 3.1 规范（动态适配域名）
+│   │   ├── calendar/route.ts   # 公农历 API
+│   │   ├── bazi/route.ts       # 八字排盘 API
+│   │   ├── meihua/route.ts     # 梅花易数 API
+│   │   ├── liuyao/route.ts     # 六爻纳甲 API
+│   │   ├── qimen/route.ts      # 奇门遁甲 API
+│   │   ├── taiyi/route.ts      # 太乙神数 API
+│   │   └── naming/route.ts     # 起名测名 API
 │   ├── blog/page.tsx           # 易学博客
 │   ├── notes/page.tsx          # 我的笔记
 │   └── resources/page.tsx      # 免费资源
+├── middleware.ts                # CORS 中间件（/api/* 跨域支持）
 ├── components/
 │   ├── layout/
-│   │   ├── Header.tsx          # 顶部导航栏（响应式12项导航）
+│   │   ├── Header.tsx          # 顶部导航栏（响应式导航）
 │   │   └── Footer.tsx          # 底部页脚
 │   ├── bazi/
 │   │   ├── BaziPanel.tsx       # 四柱八字主面板
@@ -138,13 +155,82 @@ src/
 │   │   ├── DimensionCard.tsx   # 解读维度折叠卡片（通用）
 │   │   └── InterpretationPanel.tsx # 十维度解读面板
 │   ├── calendar/
-│   │   ├── MiniCalendar.tsx    # 月历网格
-│   │   ├── DayDetail.tsx       # 日期详情面板
-│   │   └── ChengGuCard.tsx     # 称骨论命卡片
-│   └── ui/                     # 通用 UI 组件（预留）
+│   │   ├── CompactBazi.tsx        # 紧凑四柱八字展示
+│   │   ├── DayDetail.tsx          # 日期详情面板
+│   │   ├── ZejiSection.tsx        # 玉匣择吉容器组件
+│   │   ├── ZhuShenPanel.tsx       # 诸神所在+六甲旬空面板
+│   │   ├── ShenShaPanel.tsx       # 神煞值日+建除+二十八宿
+│   │   ├── DailyLesson.tsx        # 国学小课堂（关键词+问答）
+│   │   ├── DressColor.tsx         # 穿衣颜色推荐
+│   │   ├── LuckyDirection.tsx     # 吉祥方位
+│   │   └── WeekDressTable.tsx     # 7日穿衣预测
+│   ├── meihua/                # 梅花易数组件
+│   ├── liuyao/                # 六爻纳甲组件
+│   │   ├── DivinationTab.tsx       # 四种起卦UI
+│   │   ├── PaipanBoard.tsx         # 排盘展示板
+│   │   ├── AnalysisPanel.tsx       # 分析面板
+│   │   └── CoinTossAnimation.tsx   # 铜钱3D翻转动画
+│   ├── qimen/                 # 奇门遁甲组件
+│   │   ├── YinpanPaipanBoard.tsx    # 阴盘九宫可视化面板
+│   │   ├── LuckingAnalysisPanel.tsx # 阴盘格局分析解读面板
+│   │   ├── YangpanBoard.tsx         # 阳盘九宫面板
+│   │   ├── YangpanAnalysisPanel.tsx # 阳盘格局分析面板
+│   │   ├── QimenConfig.tsx          # 排盘参数配置组件
+│   │   ├── QimenInfo.tsx            # 排盘基本信息展示
+│   │   ├── PalaceCell.tsx           # 九宫单元格
+│   │   ├── StarSwapPanel.tsx        # 星门转盘面板
+│   │   ├── QimenBoard.tsx           # 盘面容器
+│   │   └── QimenAnalysis.tsx        # 分析容器
+│   ├── taiyi/                 # 太乙神数组件
+│   │   ├── InputPanel.tsx           # 排盘参数输入面板
+│   │   ├── TaiyiBoard.tsx           # 太乙九宫盘（支持compact模式）
+│   │   ├── PalaceCell.tsx           # 九宫单元格（支持compact模式）
+│   │   ├── AnalysisPanel.tsx        # 分析面板
+│   │   ├── CaseLibrary.tsx          # 经典案例库（含排盘图）
+│   │   └── KnowledgeBase.tsx        # 太乙知识库
+│   ├── naming/                # 起名测名组件
+│   │   ├── InputPanel.tsx          # 测名/起名输入面板
+│   │   ├── AnalysisPanel.tsx       # 测名分析结果面板
+│   │   ├── WuGeDisplay.tsx         # 五格数理展示
+│   │   ├── NameList.tsx            # 起名推荐列表
+│   │   ├── CharLookup.tsx          # 汉字查询工具
+│   │   └── KnowledgePanel.tsx      # 姓名学小常识
+│   └── ui/                    # 通用 UI 组件（预留）
 └── lib/
-    ├── lunar.ts                # 核心计算层（~1930 行）
-    └── bazi-interpretation.ts  # 十维度解读引擎（~1000 行）
+    ├── lunar.ts                # 核心历法计算层
+    ├── bazi-interpretation.ts  # 八字十维度解读引擎
+    ├── yuxia.ts                # 玉匣择吉算法库（诸神/神煞/建除/旬空/天赦/问答）
+    ├── zeji.ts                 # 穿衣颜色/方位算法（通用+八字个人定制）
+    ├── meihua/                 # 梅花易数计算库
+    │   ├── types.ts / constants.ts / hexagrams.ts / kangxiStrokes.ts
+    │   ├── divination.ts       # 三种起卦算法
+    │   ├── analysis.ts         # 体用分析引擎
+    │   └── index.ts
+    ├── liuyao/                 # 六爻纳甲计算库
+    │   ├── types.ts / constants.ts / hexagramData.ts / naJia.ts
+    │   ├── divination.ts       # 四种起卦算法
+    │   ├── paipan.ts           # 10步排盘管线
+    │   ├── analysis.ts         # 6层分析引擎
+    │   ├── analysisRules.ts    # 10场景断卦规则
+    │   └── index.ts
+    ├── qimen/                  # 奇门遁甲计算库
+    │   ├── types.ts / constants.ts / index.ts
+    │   ├── timeCalc.ts / trueSolarTime.ts / cityDatabase.ts / jiuGong.ts
+    │   ├── yinPan.ts / yinPanCalc.ts / yinpanPaipan.ts  # 阴盘核心
+    │   ├── luckingPaipan.ts / luckingAnalysis.ts          # 阴盘完整排盘+分析
+    │   ├── yangpanJuCalc.ts / yangpanPipeline.ts / yangpanAnalysis.ts  # 阳盘
+    │   └── panCalc.ts / analysis.ts
+    ├── taiyi/                  # 太乙神数计算库
+    │   ├── types.ts / constants.ts / index.ts
+    │   ├── timeCalc.ts / jiNian.ts / schools.ts
+    │   ├── paipan.ts           # 排盘核心管线
+    │   ├── analysis.ts / analysisRules.ts
+    │   └── caseLibrary.ts      # 经典案例库（40+历史案例）
+    └── naming/                 # 起名测名计算库
+        ├── types.ts / constants.ts / charDatabase.ts
+        ├── wugeCalc.ts / sancaiCalc.ts / charAnalysis.ts / baziMatch.ts
+        ├── scoring.ts / nameGenerator.ts / analysis.ts
+        └── index.ts
 ```
 
 ### 后续补充区
@@ -660,6 +746,45 @@ handlePaiPan() 按钮点击：
 | `getNaYin` | ganZhi | string | 纳音查表 |
 | `getLiuNianAnalysis` | baziResult, daYun, liuNian | LiuNianAnalysis | 流年联动分析 |
 
+### 6.3 梅花易数导出函数
+
+| 函数 | 文件 | 说明 |
+|------|------|------|
+| `divinateByTime` | meihua/divination.ts | 时间起卦 |
+| `divinateByNumber` | meihua/divination.ts | 数字起卦 |
+| `divinateByText` | meihua/divination.ts | 文字起卦 |
+| `performAnalysis` | meihua/analysis.ts | 体用五行生克分析 |
+
+### 6.4 六爻纳甲导出函数
+
+| 函数 | 文件 | 说明 |
+|------|------|------|
+| `paipan` | liuyao/paipan.ts | 10步排盘管线（起卦→识卦→定宫→纳甲→六亲→六神→世应→伏神→旺衰→变卦） |
+| `performAnalysis` | liuyao/analysis.ts | 6层分析引擎（定用神→查原忌仇→评旺衰→动爻分析→综合判断→文案输出） |
+
+### 6.5 奇门遁甲导出函数
+
+| 函数 | 文件 | 说明 |
+|------|------|------|
+| `yinpan_lucking_data` | qimen/luckingPaipan.ts | 阴盘完整排盘（含隐干/月将/建除） |
+| `analyzeQimen` | qimen/luckingAnalysis.ts | 阴盘格局分析 |
+| `calculateYangpan` | qimen/yangpanPipeline.ts | 阳盘排盘（拆补/置闰/茅山） |
+| `analyzeYangpan` | qimen/yangpanAnalysis.ts | 阳盘格局分析 |
+
+### 6.6 太乙神数导出函数
+
+| 函数 | 文件 | 说明 |
+|------|------|------|
+| `calculateTaiyi` | taiyi/paipan.ts | 太乙排盘（统宗/金镜，年/月/日/时四计） |
+| `analyzeTaiyi` | taiyi/analysis.ts | 太乙分析引擎 |
+
+### 6.7 起名测名导出函数
+
+| 函数 | 文件 | 说明 |
+|------|------|------|
+| `analyzeNaming` | naming/analysis.ts | 姓名五格数理综合分析 |
+| `generateNames` | naming/nameGenerator.ts | 三阶段智能起名引擎 |
+
 ### 后续补充区
 
 待更新
@@ -677,6 +802,12 @@ handlePaiPan() 按钮点击：
 5. **SVG 雷达图**：使用纯 SVG 实现五行力量图，不引入第三方图表库，减少依赖
 6. **流年分析内聚**：`getLiuNianAnalysis` 放在 `lunar.ts` 而非独立文件，因其强依赖原局/大运数据结构和五行/十神工具函数，保持内聚性
 7. **流年详情面板内嵌**：`LiuNianDetailPanel` 由 `LiuNianGrid` 内部按需渲染，不在 `page.tsx` 层面管理状态，降低页面组件复杂度
+8. **模块化计算库**：梅花/六爻/奇门/太乙/起名各自独立 lib 目录，内部再拆分 types/constants/核心算法/分析引擎/index 导出，保持关注点分离
+9. **Strategy 模式**：六爻纳甲策略用 Strategy 模式支持京房/藏山卜双流派切换；奇门遁甲阳盘定局法支持拆补/置闰/茅山三种算法
+10. **API 纯增量设计**：API 系统零修改现有页面代码，仅在 `src/app/api/v1/` 下新增路由文件，直接调用 `src/lib/` 现有计算函数
+11. **CORS 中间件**：使用 Next.js middleware 统一处理跨域，仅匹配 `/api/*` 路径，不影响前端页面
+12. **OpenAPI 动态生成**：`/api/v1/openapi.json` 为动态路由而非静态文件，自动检测当前域名填入 servers 字段
+13. **AI 语义化描述**：OpenAPI spec 和 ai-plugin.json 中的描述针对 AI 理解优化，说明"何时使用"而非"如何实现"
 
 ### 7.2 开发过程问题与解决
 
@@ -692,6 +823,15 @@ handlePaiPan() 按钮点击：
 | 阶段三 | 四维分析 + 动态五行力量图 + SVG 雷达图 | ✅ 完成 |
 | 阶段四 | 十维度命局解读引擎 + 折叠面板 + 标签页系统 | ✅ 完成 |
 | 阶段五 | 流年联动详解（getLiuNianAnalysis + LiuNianDetailPanel + LiuNianGrid 增强） | ✅ 完成 |
+| 阶段六 | 玉匣择吉（诸神/神煞/建除/旬空/天赦/问答）+ 穿衣指南（双模式+评分算法） | ✅ 完成 |
+| 阶段七 | 梅花易数（三种起卦+体用分析）| ✅ 完成 |
+| 阶段八 | 阴盘奇门遁甲（九宫可视化+隐干/月将/建除+格局分析）| ✅ 完成 |
+| 阶段九 | 阳盘奇门遁甲（拆补/置闰/茅山定局+格局分析）| ✅ 完成 |
+| 阶段十 | 六爻纳甲（四种起卦+双流派+10步排盘管线+6层分析+10场景）| ✅ 完成 |
+| 阶段十一 | 太乙神数（统宗/金镜双流派+年月日时四计+经典案例库40+例）| ✅ 完成 |
+| 阶段十二 | 起名测名（五格数理+三才配置+八字匹配+智能起名+汉字查询）| ✅ 完成 |
+| 阶段十三 | API v1 系统（7个计算端点+CORS+OpenAPI 3.1+AI Plugin清单+健康检查）| ✅ 完成 |
+| 阶段十四 | 开发文档页面（/docs，API手册+AI Skills接入指南两大板块）| ✅ 完成 |
 
 ### 后续补充区
 
@@ -699,16 +839,28 @@ handlePaiPan() 按钮点击：
 
 ---
 
-## 八、待开发模块清单
+## 八、模块清单
+
+### 已完成模块
+
+| 模块 | 页面路由 | 完成版本 |
+|------|----------|----------|
+| 玉匣通书（公农历+择吉+穿衣） | /calendar | v1.0 |
+| 八字排盘（四柱+大运+流年+十维度） | /bazi | v1.0 |
+| 梅花易数 | /meihua | v3.0 |
+| 阴盘奇门遁甲 | /qimen/lucking | v3.0 |
+| 阳盘奇门遁甲 | /qimen/yangpan | v4.0 |
+| 六爻纳甲 | /liuyao | v4.0 |
+| 太乙神数 | /taiyi | v5.0 |
+| 起名测名 | /naming | v5.0 |
+| API v1 系统（7个计算端点） | /api/v1/* | v6.0 |
+| AI Skills 基础设施 | /.well-known + /api/v1/openapi.json | v6.0 |
+| 开发文档页面 | /docs | v6.0 |
+
+### 待开发模块
 
 | 模块 | 页面路由 | 当前状态 |
 |------|----------|----------|
-| 梅花易数 | /meihua | 占位页面 |
-| 奇门遁甲 | /qimen | 占位页面 |
-| 六爻排盘 | /liuyao | 占位页面 |
-| 太乙神数 | /taiyi | 占位页面 |
-| 玉匣择吉 | /zhaoji | 占位页面 |
-| 起名测名 | /naming | 占位页面 |
 | 易学博客 | /blog | 占位页面 |
 | 我的笔记 | /notes | 占位页面 |
 | 免费资源 | /resources | 占位页面 |
@@ -722,9 +874,10 @@ handlePaiPan() 按钮点击：
 ## 九、部署与构建
 
 - **构建命令**：`npm run build`（Next.js 16 + Turbopack）
-- **静态导出**：所有页面均为静态预渲染（○ Static）
+- **页面类型**：静态页面（○ Static）+ API 动态路由（ƒ Dynamic）+ CORS 中间件（ƒ Proxy）
 - **编译验证**：每个开发阶段完成后均执行 `npm run build` 确认零错误
-- **最终编译耗时**：约 1.7 秒编译 + 0.7 秒静态生成
+- **API 路由**：8 个动态端点（7个计算 + health），通过 middleware 统一添加 CORS 头
+- **AI 平台接入**：部署后 AI 平台填入域名即可自动发现并注册全部技能
 
 ### 后续补充区
 
@@ -732,4 +885,4 @@ handlePaiPan() 按钮点击：
 
 ---
 
-> **文档维护说明**：后续开发新功能后，在对应章节的「后续补充区」追加内容，或新增章节。版本号递增更新（V1.1, V1.2...），归档时间同步更新。
+> **文档维护说明**：后续开发新功能后，在对应章节的「后续补充区」追加内容，或新增章节。版本号递增更新，归档时间同步更新。
