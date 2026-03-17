@@ -2,10 +2,10 @@
 
 ## 概述
 
-所有 API 均为 **POST** 请求，请求体为 JSON 格式。
-
 - 基础路径：`/api/v1/`
+- 计算端点均为 **POST**，请求体为 JSON
 - Content-Type：`application/json`
+- 支持 **CORS 跨域调用**
 - 统一响应格式：
 
 ```json
@@ -457,3 +457,24 @@ curl -X POST http://localhost:3000/api/v1/naming \
 2. `hour` 为 24 小时制 (0-23)，系统内部自动转换为十二时辰
 3. 分析类字段（`analysis`、`interpretation`）采用宽容策略：计算失败时返回 `null`，不影响主结果
 4. 返回数据结构与前端页面共用同一套计算引擎，结果完全一致
+
+---
+
+## AI 平台接入
+
+本 API 提供标准的 AI 平台发现协议，支持 OpenClaw / Coze / Dify / ChatGPT Plugins 等平台一键接入。
+
+### 自动发现
+
+| 端点 | 用途 |
+|------|------|
+| `GET /.well-known/ai-plugin.json` | AI 插件清单（平台自动扫描此路径） |
+| `GET /api/v1/openapi.json` | OpenAPI 3.1 完整规范 |
+| `GET /api/v1/health` | 健康检查（平台探活） |
+
+### 接入步骤
+
+1. 将本服务部署到公网可访问的域名（如 `https://yixue.example.com`）
+2. 在 AI 平台中填入域名，平台会自动拉取 `/.well-known/ai-plugin.json`
+3. 平台读取 `openapi.json` 后，自动注册所有 7 个计算技能
+4. 完成 — AI 助手即可调用全部易学计算能力

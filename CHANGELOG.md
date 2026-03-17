@@ -15,6 +15,10 @@
 - **POST /api/v1/taiyi**: 太乙神数排盘（统宗/金镜，年/月/日/时四种计算类型）与分析
 - **POST /api/v1/naming**: 姓名五格数理分析 + 智能起名推荐
 - **设计原则**: 零修改现有页面代码，所有 API 为纯增量附加功能
+- **CORS 中间件**: 支持跨域调用，外部网站和 AI 平台可直接请求
+- **OpenAPI 3.1 规范**: `GET /api/v1/openapi.json` 动态提供完整 Schema，自动适配域名
+- **AI 插件清单**: `GET /.well-known/ai-plugin.json` 标准发现协议，支持 OpenClaw / Coze / Dify 等平台一键接入
+- **健康检查**: `GET /api/v1/health` 平台探活端点
 
 ## v5.1
 
