@@ -122,41 +122,41 @@ function TimeForm({ onResult, onError }: { onResult: (r: DivinationResult) => vo
 
   return (
     <div className="space-y-4">
-      {/* 日期选择 */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      {/* 日期选择 + 当前时间 同一行 */}
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 items-end">
         <div>
           <label className={labelCls}>年</label>
-          <select value={year} onChange={(e) => setYear(+e.target.value)} className={selectCls}>
+          <select value={year} onChange={(e) => setYear(+e.target.value)} className={selectCls + ' w-full'}>
             {yearOptions().map((y) => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls}>月</label>
-          <select value={month} onChange={(e) => setMonth(+e.target.value)} className={selectCls}>
+          <select value={month} onChange={(e) => setMonth(+e.target.value)} className={selectCls + ' w-full'}>
             {Array.from({ length: 12 }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}月</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls}>日</label>
-          <select value={day} onChange={(e) => setDay(+e.target.value)} className={selectCls}>
+          <select value={day} onChange={(e) => setDay(+e.target.value)} className={selectCls + ' w-full'}>
             {Array.from({ length: 31 }, (_, i) => <option key={i + 1} value={i + 1}>{i + 1}日</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls}>时辰</label>
-          <select value={hour} onChange={(e) => setHour(+e.target.value)} className={selectCls}>
+          <select value={hour} onChange={(e) => setHour(+e.target.value)} className={selectCls + ' w-full'}>
             {SHICHEN_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
+        <div>
+          <button
+            onClick={handleNow}
+            className="btn-outline w-full py-2"
+          >
+            当前时间
+          </button>
+        </div>
       </div>
-
-      <button
-        onClick={handleNow}
-        className="text-sm px-3 py-1.5 rounded-lg transition-colors"
-        style={{ color: 'var(--color-cinnabar)', border: '1px solid var(--color-cinnabar)' }}
-      >
-        使用当前时间
-      </button>
 
       {/* 问事内容 */}
       <div>

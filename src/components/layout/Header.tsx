@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 
 const navItems = [
   { href: '/', label: '首页', icon: '🏠' },
-  { href: '/calendar', label: '公农历查询', icon: '📅' },
+  { href: '/calendar', label: '玉匣通书', icon: '📅' },
   { href: '/bazi', label: '八字排盘', icon: '🔮' },
   { href: '/meihua', label: '梅花排盘', icon: '🌸' },
   { href: '/qimen', label: '奇门排盘', icon: '🧭' },

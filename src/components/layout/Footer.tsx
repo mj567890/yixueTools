@@ -19,7 +19,7 @@ export default function Footer() {
               嘉嘉易学工具箱
             </h3>
             <p className="text-sm text-[var(--color-ink-light)] leading-relaxed">
-              传承国学经典，融合现代科技。提供专业的公农历查询、八字排盘、梅花易数、奇门遁甲等易学工具。所有计算均在本地完成，个人信息不上传服务器。
+              传承国学经典，融合现代科技。提供专业的玉匣通书、八字排盘、梅花易数、奇门遁甲等易学工具。所有计算均在本地完成，个人信息不上传服务器。
             </p>
           </div>
 

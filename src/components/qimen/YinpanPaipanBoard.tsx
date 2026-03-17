@@ -281,6 +281,8 @@ export default function YinpanPaipanBoard({ data, schoolName }: YinpanPaipanBoar
             gridTemplateColumns: 'minmax(70px, 100px) 1fr minmax(70px, 100px)',
             gap: '4px',
             alignItems: 'stretch',
+            maxWidth: 750,
+            margin: '0 auto',
           }}
         >
           {/* ===== Row 0: 顶部月将+隐干+建星 ===== */}
@@ -311,7 +313,7 @@ export default function YinpanPaipanBoard({ data, schoolName }: YinpanPaipanBoar
             ))}
           </div>
 
-          {/* 九宫格：封闭边框 */}
+          {/* 九宫格：封闭边框，与阳盘一致 maxWidth 540 */}
           <div
             style={{
               display: 'grid',
@@ -320,6 +322,9 @@ export default function YinpanPaipanBoard({ data, schoolName }: YinpanPaipanBoar
               border: '2px solid var(--color-border-warm)',
               borderRadius: '4px',
               overflow: 'hidden',
+              maxWidth: 540,
+              margin: '0 auto',
+              width: '100%',
             }}
           >
             {palaceGrid.flat().map((p, idx) => {

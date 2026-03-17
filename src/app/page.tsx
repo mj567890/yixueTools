@@ -4,7 +4,7 @@ const tools = [
   {
     href: '/calendar',
     icon: '📅',
-    title: '公农历查询',
+    title: '玉匣通书',
     desc: '日期转换、四柱八字、纳音五行、节气查询、民俗择吉、穿衣指南、称骨论命',
     color: 'var(--color-cinnabar)',
   },
@@ -50,6 +50,13 @@ const tools = [
     desc: '结合五格、三才、生辰八字进行姓名吉凶分析',
     color: '#00695C',
   },
+  {
+    href: '/about',
+    icon: '💡',
+    title: '关于',
+    desc: '源自2006年「嘉嘉易学万年历」，时隔二十年全新重制',
+    color: '#37474F',
+  },
 ];
 
 export default function HomePage() {
@@ -57,8 +64,15 @@ export default function HomePage() {
     <div className="max-w-7xl mx-auto px-4 py-10">
       {/* Hero */}
       <section className="text-center mb-12">
+        {/* 装饰符号 */}
+        <div
+          className="text-2xl mb-4 tracking-[0.5em] opacity-40"
+          style={{ color: 'var(--color-gold)', fontFamily: 'var(--font-family-kai)' }}
+        >
+          ☰ ☷ ☵ ☲
+        </div>
         <h1
-          className="text-4xl md:text-5xl font-bold mb-4 tracking-wide"
+          className="text-4xl md:text-5xl font-bold mb-3 tracking-wide"
           style={{
             fontFamily: 'var(--font-family-kai)',
             color: 'var(--color-primary-dark)',
@@ -69,17 +83,20 @@ export default function HomePage() {
         <p className="text-lg text-[var(--color-ink-light)] max-w-2xl mx-auto leading-relaxed">
           传承国学经典 · 融合现代科技
         </p>
-        {/* text-sm→text-base(16px) */}
         <p className="text-base text-[var(--color-ink-light)] mt-2 opacity-70">
-          专业的公农历查询、命理排盘与易学研究工具集
+          专业的历法择吉、命理排盘与易学研究工具集
         </p>
-        <div className="mt-6 flex items-center justify-center gap-4">
-          <Link href="/calendar" className="btn-primary no-underline">
-            开始查询
-          </Link>
-          <Link href="/about" className="btn-outline no-underline">
-            关于
-          </Link>
+        {/* 装饰分隔 */}
+        <div className="mt-6 flex items-center justify-center gap-3 opacity-30">
+          <span
+            className="block h-[1px] w-16"
+            style={{ background: 'linear-gradient(to right, transparent, var(--color-cinnabar))' }}
+          />
+          <span style={{ color: 'var(--color-cinnabar)', fontSize: '12px' }}>&#9672;</span>
+          <span
+            className="block h-[1px] w-16"
+            style={{ background: 'linear-gradient(to left, transparent, var(--color-cinnabar))' }}
+          />
         </div>
       </section>
 

@@ -79,7 +79,7 @@ export default function CalendarPage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* 标题 */}
       <div className="mb-6">
-        <h1 className="section-title text-2xl">公农历查询</h1>
+        <h1 className="section-title text-2xl">玉匣通书</h1>
         <p className="text-base text-[var(--color-ink-light)] mt-2">
           支持公历农历互查、四柱八字、纳音五行、节气宜忌、民俗择吉、穿衣指南
         </p>

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * 太乙经典案例库组件
+ * 太乙经典案例库组件（含排盘图）
  */
 
 import { useState, useMemo } from 'react';
@@ -9,13 +9,16 @@ import {
   CLASSICAL_CASES, getAllTags, getAllDynasties,
   filterCasesByTag, filterCasesByDynasty, searchCases,
 } from '@/lib/taiyi/caseLibrary';
-import type { ClassicalCase } from '@/lib/taiyi/types';
+import { calculateTaiyi } from '@/lib/taiyi';
+import type { ClassicalCase, TaiyiResult } from '@/lib/taiyi/types';
+import TaiyiBoard from './TaiyiBoard';
 
 export default function CaseLibraryPanel() {
   const [activeTag, setActiveTag] = useState<string>('');
   const [activeDynasty, setActiveDynasty] = useState<string>('');
   const [keyword, setKeyword] = useState('');
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
+  const [caseResult, setCaseResult] = useState<TaiyiResult | null>(null);
 
   const tags = useMemo(() => getAllTags(), []);
   const dynasties = useMemo(() => getAllDynasties(), []);
@@ -27,6 +30,31 @@ export default function CaseLibraryPanel() {
     if (activeDynasty) cases = cases.filter(c => c.dynasty === activeDynasty);
     return cases;
   }, [keyword, activeTag, activeDynasty]);
+
+  const handleExpand = (i: number) => {
+    if (expandedIdx === i) {
+      setExpandedIdx(null);
+      setCaseResult(null);
+      return;
+    }
+    setExpandedIdx(i);
+    // 为案例生成排盘
+    const c = filteredCases[i];
+    try {
+      const result = calculateTaiyi({
+        year: Math.abs(c.year),
+        month: c.month ?? 1,
+        day: c.day ?? 1,
+        hour: c.hour ?? 12,
+        minute: 0,
+        school: 'tongzong',
+        calcType: c.calcType as 'year' | 'month' | 'day' | 'hour',
+      });
+      setCaseResult(result);
+    } catch {
+      setCaseResult(null);
+    }
+  };
 
   return (
     <div className="card-chinese p-4 md:p-5 space-y-4">
@@ -120,7 +148,7 @@ export default function CaseLibraryPanel() {
               key={i}
               className="rounded-lg cursor-pointer transition-all"
               style={{ border: '1px solid var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-              onClick={() => setExpandedIdx(expandedIdx === i ? null : i)}
+              onClick={() => handleExpand(i)}
             >
               <div className="p-2.5">
                 <div className="flex items-center justify-between">
@@ -153,7 +181,14 @@ export default function CaseLibraryPanel() {
               </div>
 
               {expandedIdx === i && (
-                <div className="px-2.5 pb-2.5 space-y-2" style={{ borderTop: '1px dashed var(--color-border-warm)' }}>
+                <div className="px-2.5 pb-2.5 space-y-3" style={{ borderTop: '1px dashed var(--color-border-warm)' }}>
+                  {/* 排盘图 */}
+                  {caseResult && (
+                    <div className="pt-2">
+                      <TaiyiBoard result={caseResult} />
+                    </div>
+                  )}
+
                   <div className="pt-2">
                     <div className="text-xs font-bold mb-1" style={{ color: 'var(--color-primary-dark)' }}>太乙解读</div>
                     <p className="text-xs" style={{ color: 'var(--color-ink)', lineHeight: '1.6' }}>{c.interpretation}</p>

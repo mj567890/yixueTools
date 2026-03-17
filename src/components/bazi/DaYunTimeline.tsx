@@ -45,16 +45,18 @@ export default function DaYunTimeline({ data, selectedIndex, onSelect, analysis 
   const currentYear = new Date().getFullYear();
   const panelRef = useRef<HTMLDivElement>(null);
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  const userClicked = useRef(false);
 
   // 切换大运时重置移动端折叠状态
   useEffect(() => {
     setMobileExpanded(false);
   }, [selectedIndex]);
 
-  // 断语面板出现时滚动到可视区
+  // 断语面板出现时，仅用户主动点击大运卡片才滚动
   useEffect(() => {
-    if (analysis && panelRef.current) {
+    if (analysis && panelRef.current && userClicked.current) {
       panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      userClicked.current = false;
     }
   }, [analysis]);
 
@@ -131,7 +133,7 @@ export default function DaYunTimeline({ data, selectedIndex, onSelect, analysis 
                   /* 【修改】内边距增大，提升呼吸感 */
                   padding: '16px 14px',
                 }}
-                onClick={() => onSelect?.(dy.index)}
+                onClick={() => { userClicked.current = true; onSelect?.(dy.index); }}
               >
                 {/* 【修复】选中态顶部横线标识 —— 3px 朱砂红，宽度与内边距对齐 */}
                 {/* 始终占位以防止选中时布局抖动，未选中时透明 */}

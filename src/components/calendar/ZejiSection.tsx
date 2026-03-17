@@ -76,19 +76,14 @@ export default function ZejiSection({ year, month, day }: ZejiSectionProps) {
         * 以上内容据《许真君玉匣记》《协纪辩方书》等古籍编纂，旨在普及国学文化，仅供民俗参考，不构成决策依据。传统择吉学说存在多个流派，判定或有差异，读者宜辩证理解。
       </p>
 
-      {/* ── 分隔线 ── */}
-      <div className="relative my-6">
-        <hr className="border-t border-[var(--color-border-warm)]" />
-        <span
-          className="absolute left-1/2 -translate-x-1/2 -top-3 px-4 text-sm tracking-widest"
+      {/* ── 分隔线（与 section-title 装饰线同色系） ── */}
+      <div className="my-8">
+        <div
+          className="h-[3px] rounded-full"
           style={{
-            backgroundColor: 'var(--color-bg-warm)',
-            color: 'var(--color-gold)',
-            fontFamily: 'var(--font-family-kai)',
+            background: 'linear-gradient(90deg, var(--color-cinnabar), var(--color-cinnabar) 40%, transparent)',
           }}
-        >
-          穿 衣 指 南
-        </span>
+        />
       </div>
 
       {/* ── 穿衣颜色指南（独立板块） ── */}

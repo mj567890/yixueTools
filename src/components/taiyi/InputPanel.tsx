@@ -48,173 +48,95 @@ export default function InputPanel({ onCalculate }: InputPanelProps) {
     setMinute(n.getMinutes());
   };
 
-  const btnBase = 'flex-1 py-2 text-sm font-medium transition-all rounded';
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  const yearOptions = [];
+  for (let y = 1940; y <= 2060; y++) yearOptions.push(y);
+  const dayOptions = [];
+  for (let d = 1; d <= daysInMonth; d++) dayOptions.push(d);
 
   return (
-    <div className="card-chinese p-4 md:p-5 space-y-4">
-      <h3
-        className="text-base font-bold"
-        style={{ color: 'var(--color-primary-dark)', fontFamily: 'var(--font-family-kai)' }}
-      >
-        排盘设置
-      </h3>
-
-      {/* 日期时间输入 */}
-      <div className="flex flex-wrap gap-2 items-center justify-center">
-        <label className="flex items-center gap-1 text-sm">
-          <span style={{ color: 'var(--color-ink-light)' }}>年</span>
-          <input
-            type="number"
-            value={year}
-            onChange={e => setYear(Number(e.target.value))}
-            className="w-20 px-2 py-1 border rounded text-center text-sm"
-            style={{ borderColor: 'var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-          />
-        </label>
-        <label className="flex items-center gap-1 text-sm">
-          <span style={{ color: 'var(--color-ink-light)' }}>月</span>
-          <input
-            type="number"
-            min={1}
-            max={12}
-            value={month}
-            onChange={e => setMonth(Number(e.target.value))}
-            className="w-14 px-2 py-1 border rounded text-center text-sm"
-            style={{ borderColor: 'var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-          />
-        </label>
-        <label className="flex items-center gap-1 text-sm">
-          <span style={{ color: 'var(--color-ink-light)' }}>日</span>
-          <input
-            type="number"
-            min={1}
-            max={31}
-            value={day}
-            onChange={e => setDay(Number(e.target.value))}
-            className="w-14 px-2 py-1 border rounded text-center text-sm"
-            style={{ borderColor: 'var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-          />
-        </label>
-        <label className="flex items-center gap-1 text-sm">
-          <span style={{ color: 'var(--color-ink-light)' }}>时</span>
-          <input
-            type="number"
-            min={0}
-            max={23}
-            value={hour}
-            onChange={e => setHour(Number(e.target.value))}
-            className="w-14 px-2 py-1 border rounded text-center text-sm"
-            style={{ borderColor: 'var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-          />
-        </label>
-        <label className="flex items-center gap-1 text-sm">
-          <span style={{ color: 'var(--color-ink-light)' }}>分</span>
-          <input
-            type="number"
-            min={0}
-            max={59}
-            value={minute}
-            onChange={e => setMinute(Number(e.target.value))}
-            className="w-14 px-2 py-1 border rounded text-center text-sm"
-            style={{ borderColor: 'var(--color-border-warm)', background: 'var(--color-bg-card)' }}
-          />
-        </label>
-        <button
-          onClick={handleNow}
-          className="btn-outline px-3 py-1 text-xs rounded"
-        >
-          当前时间
-        </button>
-      </div>
-
-      {/* 流派选择 */}
-      <div>
-        <div className="text-xs mb-1" style={{ color: 'var(--color-ink-light)' }}>流派</div>
-        <div className="flex gap-1 rounded overflow-hidden" style={{ border: '1px solid var(--color-border-warm)' }}>
-          {[
-            { value: 'tongzong' as TaiyiSchool, label: '统宗宝鉴' },
-            { value: 'jinjing' as TaiyiSchool, label: '金镜式经' },
-          ].map(opt => (
-            <button
-              key={opt.value}
-              className={btnBase}
-              style={{
-                backgroundColor: school === opt.value ? 'var(--color-cinnabar)' : 'transparent',
-                color: school === opt.value ? '#fff' : 'var(--color-ink-light)',
-              }}
-              onClick={() => setSchool(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
+    <div className="card-chinese p-5 space-y-4">
+      {/* 日期时间 */}
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
+        <div>
+          <label className="form-label">年</label>
+          <select className="form-input w-full" value={year} onChange={e => setYear(Number(e.target.value))}>
+            {yearOptions.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="form-label">月</label>
+          <select className="form-input w-full" value={month} onChange={e => setMonth(Number(e.target.value))}>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map(m => (
+              <option key={m} value={m}>{m}月</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="form-label">日</label>
+          <select className="form-input w-full" value={day > daysInMonth ? daysInMonth : day} onChange={e => setDay(Number(e.target.value))}>
+            {dayOptions.map(d => <option key={d} value={d}>{d}日</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="form-label">时</label>
+          <select className="form-input w-full" value={hour} onChange={e => setHour(Number(e.target.value))}>
+            {Array.from({ length: 24 }, (_, i) => i).map(h => (
+              <option key={h} value={h}>{String(h).padStart(2, '0')}时</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="form-label">分</label>
+          <select className="form-input w-full" value={minute} onChange={e => setMinute(Number(e.target.value))}>
+            {Array.from({ length: 60 }, (_, i) => i).map(m => (
+              <option key={m} value={m}>{String(m).padStart(2, '0')}分</option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* 四计选择 */}
-      <div>
-        <div className="text-xs mb-1" style={{ color: 'var(--color-ink-light)' }}>计算类型</div>
-        <div className="flex gap-1 rounded overflow-hidden" style={{ border: '1px solid var(--color-border-warm)' }}>
-          {[
-            { value: 'year' as CalcType, label: '年计' },
-            { value: 'month' as CalcType, label: '月计' },
-            { value: 'day' as CalcType, label: '日计' },
-            { value: 'hour' as CalcType, label: '时计' },
-          ].map(opt => (
-            <button
-              key={opt.value}
-              className={btnBase}
-              style={{
-                backgroundColor: calcType === opt.value ? 'var(--color-cinnabar)' : 'transparent',
-                color: calcType === opt.value ? '#fff' : 'var(--color-ink-light)',
-              }}
-              onClick={() => setCalcType(opt.value)}
-            >
-              {opt.label}
-            </button>
-          ))}
+      {/* 流派 + 计算类型 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="form-label">流派</label>
+          <select className="form-input w-full" value={school} onChange={e => setSchool(e.target.value as TaiyiSchool)}>
+            <option value="tongzong">统宗宝鉴</option>
+            <option value="jinjing">金镜式经</option>
+          </select>
+        </div>
+        <div>
+          <label className="form-label">计算类型</label>
+          <select className="form-input w-full" value={calcType} onChange={e => setCalcType(e.target.value as CalcType)}>
+            <option value="year">年计</option>
+            <option value="month">月计</option>
+            <option value="day">日计</option>
+            <option value="hour">时计</option>
+          </select>
         </div>
       </div>
 
       {/* 场景选择 */}
       <div>
-        <div className="text-xs mb-1" style={{ color: 'var(--color-ink-light)' }}>问事场景（可选）</div>
-        <div className="flex flex-wrap gap-1">
-          <button
-            className="px-3 py-1 text-xs rounded transition-all"
-            style={{
-              backgroundColor: !scenario ? 'var(--color-cinnabar)' : 'transparent',
-              color: !scenario ? '#fff' : 'var(--color-ink-light)',
-              border: '1px solid var(--color-border-warm)',
-            }}
-            onClick={() => setScenario('')}
-          >
-            不选
-          </button>
+        <label className="form-label">问事场景（可选）</label>
+        <select className="form-input w-full" value={scenario} onChange={e => setScenario(e.target.value as ScenarioType | '')}>
+          <option value="">-- 不指定 --</option>
           {SCENARIO_CONFIGS.map(sc => (
-            <button
-              key={sc.type}
-              className="px-3 py-1 text-xs rounded transition-all"
-              style={{
-                backgroundColor: scenario === sc.type ? 'var(--color-cinnabar)' : 'transparent',
-                color: scenario === sc.type ? '#fff' : 'var(--color-ink-light)',
-                border: '1px solid var(--color-border-warm)',
-              }}
-              onClick={() => setScenario(sc.type)}
-              title={sc.desc}
-            >
-              {sc.label}
-            </button>
+            <option key={sc.type} value={sc.type}>{sc.label}</option>
           ))}
-        </div>
+        </select>
       </div>
 
-      {/* 排盘按钮 */}
-      <button
-        onClick={handleSubmit}
-        className="btn-primary w-full py-2.5 text-sm font-bold rounded"
-      >
-        起盘推算
-      </button>
+      {/* 按钮 */}
+      <div className="flex gap-3">
+        <button className="btn-primary flex-1" onClick={handleSubmit}>
+          起盘推算
+        </button>
+        <button className="btn-outline" onClick={handleNow}>
+          当前时间
+        </button>
+      </div>
     </div>
   );
 }
