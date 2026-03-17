@@ -515,10 +515,19 @@ export function getAllTags(): string[] {
 }
 
 /**
- * 获取所有唯一朝代
+ * 获取所有唯一朝代（按时间顺序）
  */
+const DYNASTY_ORDER = [
+  '西周', '秦', '西汉', '新', '东汉', '蜀汉', '西晋', '东晋',
+  '隋', '唐', '北宋', '南宋', '金/蒙古', '明', '清', '清/民国', '民国', '现代',
+];
+
 export function getAllDynasties(): string[] {
   const dynastySet = new Set<string>();
   CLASSICAL_CASES.forEach(c => dynastySet.add(c.dynasty));
-  return Array.from(dynastySet);
+  return Array.from(dynastySet).sort((a, b) => {
+    const ia = DYNASTY_ORDER.indexOf(a);
+    const ib = DYNASTY_ORDER.indexOf(b);
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+  });
 }

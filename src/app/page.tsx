@@ -51,10 +51,10 @@ const tools = [
     color: '#00695C',
   },
   {
-    href: '/about',
-    icon: '💡',
-    title: '关于',
-    desc: '源自2006年「嘉嘉易学万年历」，时隔二十年全新重制',
+    href: '/docs',
+    icon: '📡',
+    title: '开发文档',
+    desc: 'API 接口手册、AI Skills 接入指南，供第三方网站和 AI 平台调用',
     color: '#37474F',
   },
 ];

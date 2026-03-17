@@ -26,9 +26,10 @@ const WX_BG: Record<string, string> = {
 interface PalaceCellProps {
   palace: TaiyiPalaceState;
   isCenter?: boolean;
+  compact?: boolean;
 }
 
-export default function PalaceCell({ palace, isCenter }: PalaceCellProps) {
+export default function PalaceCell({ palace, isCenter, compact }: PalaceCellProps) {
   const info = TAIYI_PALACE_INFO[palace.palaceId];
   const wxColor = WX_COLOR[info.element] || '#333';
   const wxBg = WX_BG[info.element] || '#fff';
@@ -42,7 +43,7 @@ export default function PalaceCell({ palace, isCenter }: PalaceCellProps) {
 
   return (
     <div
-      className="card-chinese p-1.5 md:p-2 flex flex-col justify-between min-h-[120px] md:min-h-[150px]"
+      className={`card-chinese flex flex-col justify-between ${compact ? 'p-1 min-h-[90px]' : 'p-1.5 md:p-2 min-h-[120px] md:min-h-[150px]'}`}
       style={{
         borderColor: palace.hasTaiyi ? 'var(--color-cinnabar)' : undefined,
         borderWidth: palace.hasTaiyi ? '2px' : undefined,

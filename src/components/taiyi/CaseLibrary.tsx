@@ -137,7 +137,7 @@ export default function CaseLibraryPanel() {
       </div>
 
       {/* 案例列表 */}
-      <div className="space-y-2 max-h-[500px] overflow-y-auto">
+      <div className="space-y-2 max-h-[800px] overflow-y-auto">
         {filteredCases.length === 0 ? (
           <p className="text-sm text-center py-4" style={{ color: 'var(--color-ink-light)' }}>
             未找到匹配的案例
@@ -182,10 +182,10 @@ export default function CaseLibraryPanel() {
 
               {expandedIdx === i && (
                 <div className="px-2.5 pb-2.5 space-y-3" style={{ borderTop: '1px dashed var(--color-border-warm)' }}>
-                  {/* 排盘图 */}
+                  {/* 排盘图（紧凑正方形） */}
                   {caseResult && (
-                    <div className="pt-2">
-                      <TaiyiBoard result={caseResult} />
+                    <div className="pt-2 max-w-sm mx-auto">
+                      <TaiyiBoard result={caseResult} compact />
                     </div>
                   )}
 

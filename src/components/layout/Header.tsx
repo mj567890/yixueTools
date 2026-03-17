@@ -13,6 +13,7 @@ const navItems = [
   { href: '/liuyao', label: '六爻排盘', icon: '⚊' },
   { href: '/taiyi', label: '太乙排盘', icon: '☯' },
   { href: '/naming', label: '起名测名', icon: '✍' },
+  { href: '/docs', label: '开发文档', icon: '📡' },
   { href: '/about', label: '关于', icon: '💡' },
 ];
 
